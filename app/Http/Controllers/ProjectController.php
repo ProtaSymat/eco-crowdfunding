@@ -31,7 +31,6 @@ class ProjectController extends Controller
             $query->where('status', $request->status);
         }
         
-        // Tri
         $sortBy = $request->get('sort', 'newest');
         
         switch ($sortBy) {
@@ -39,7 +38,6 @@ class ProjectController extends Controller
                 $query->orderBy('created_at', 'desc');
                 break;
             case 'popular':
-                // À implémenter plus tard avec le nombre de contributions
                 $query->orderBy('created_at', 'desc');
                 break;
             case 'ending_soon':

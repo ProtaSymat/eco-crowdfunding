@@ -1,4 +1,3 @@
-<!-- resources/views/projects/create.blade.php -->
 @extends('layouts.app')
 
 @section('content')
@@ -44,8 +43,10 @@
                 <div class="mb-3">
                     <label for="category_id" class="form-label">Catégorie</label>
                     <select class="form-select" id="category_id" name="category_id" required>
-                        <option selected>Choisir une catégorie</option>
-                        <!-- Les options de catégorie viennent ici -->
+                        <option value="" selected>Choisir une catégorie</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 

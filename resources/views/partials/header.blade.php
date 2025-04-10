@@ -50,13 +50,6 @@
                         </a>
                     </li>
                     
-                    <!-- Messages -->
-                    <!-- <li class="nav-item mx-1 d-none d-lg-block">
-                        <a class="nav-link" href="#" title="Messages">
-                            <i data-feather="message-square" class="feather-sm"></i>
-                        </a>
-                    </li> -->
-                    
                     @guest
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">
@@ -80,7 +73,16 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end shadow border-0 py-2" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('account') }}">
+                                @php
+                                $user = Auth::user();
+                                $dashboardRoute = match($user->role) {
+                                    'admin' => 'admin.dashboard',
+                                    'creator' => 'creator.dashboard',
+                                    default => 'backer.dashboard',
+                                };
+                                @endphp
+
+                                <a class="dropdown-item" href="{{ route($dashboardRoute) }}">
                                     <i data-feather="user" class="feather-sm me-2"></i>Mon Compte
                                 </a>
                                 <a class="dropdown-item" href="#">
