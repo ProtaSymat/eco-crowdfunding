@@ -1,16 +1,14 @@
 @extends('account.account_layout')
 
 @section('account_content')
-<!-- Contenu pour les créateurs -->
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
         <h3 class="mb-0">Tableau de bord créateur</h3>
-        <a href="{{ route('creator.project.create') }}" class="btn btn-success">
+        <a href="#" class="btn btn-success">
             <i data-feather="plus" class="feather-sm me-1"></i>Nouveau projet
         </a>
     </div>
     <div class="card-body">
-        <!-- Messages de succès ou d'erreur -->
         @if(session('success'))
             <div class="alert alert-success mb-4">
                 <i data-feather="check-circle" class="feather-sm me-1"></i>
@@ -25,7 +23,6 @@
         @endif
         
         <div class="row">
-            <!-- Statistiques des projets -->
             <div class="col-md-4 mb-4">
                 <div class="card border-0 bg-light">
                     <div class="card-body">
@@ -43,7 +40,6 @@
                 </div>
             </div>
             
-            <!-- Fonds récoltés -->
             <div class="col-md-4 mb-4">
                 <div class="card border-0 bg-light">
                     <div class="card-body">
@@ -61,7 +57,6 @@
                 </div>
             </div>
             
-            <!-- Contributeurs -->
             <div class="col-md-4 mb-4">
                 <div class="card border-0 bg-light">
                     <div class="card-body">
@@ -80,7 +75,6 @@
             </div>
         </div>
         
-        <!-- Graphique d'évolution des contributions -->
         <div class="card mb-4">
             <div class="card-header bg-light">
                 <h5 class="mb-0">Évolution des contributions</h5>
@@ -90,7 +84,6 @@
             </div>
         </div>
         
-        <!-- Projets en cours -->
         <h4 class="mt-4">Vos projets actifs</h4>
         
         @if(isset($activeProjects) && count($activeProjects) > 0)
@@ -150,7 +143,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Voir">
+                                        <a href="{{ route('project.show', $project->slug) }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Voir">
                                             <i data-feather="eye" class="feather-sm"></i>
                                         </a>
                                         <a href="{{ route('creator.project.edit', $project->id) }}" class="btn btn-outline-warning" data-bs-toggle="tooltip" title="Modifier">
@@ -171,12 +164,11 @@
                 <i data-feather="info" class="feather-sm me-1"></i>
                 Vous n'avez pas encore de projets actifs. Créez votre premier projet !
             </div>
-            <a href="{{ route('creator.project.create') }}" class="btn btn-success">Créer un projet</a>
+            <a href="{{ route('project.create') }}" class="btn btn-success">Créer un projet</a>
         @endif
     </div>
 </div>
 
-<!-- Activité récente -->
 <div class="card shadow-sm">
     <div class="card-header bg-white">
         <h4 class="mb-0">Activité récente</h4>
@@ -208,15 +200,13 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Affichage du graphique d'évolution des contributions (exemple)
         const ctx = document.getElementById('contributionsChart').getContext('2d');
         
-        // Données d'exemple à remplacer par des données réelles
         const chartData = {
             labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
             datasets: [{
                 label: 'Contributions (€)',
-                data: [0, 0, 0, 0, 0, 0], // À remplacer par des données réelles
+                data: [0, 0, 0, 0, 0, 0],
                 backgroundColor: 'rgba(40, 167, 69, 0.2)',
                 borderColor: 'rgba(40, 167, 69, 1)',
                 borderWidth: 2,
@@ -224,7 +214,6 @@
             }]
         };
         
-        // Initialisation du graphique
         const myChart = new Chart(ctx, {
             type: 'line',
             data: chartData,
@@ -253,7 +242,6 @@
             }
         });
         
-        // Tooltips d'initialisation
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);

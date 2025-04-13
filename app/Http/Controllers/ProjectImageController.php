@@ -19,13 +19,10 @@ class ProjectImageController extends Controller
             'caption' => 'nullable|string|max:255',
         ]);
         
-        // Déterminer l'ordre de l'image
         $maxOrder = $project->images()->max('order') ?? 0;
         
-        // Traiter et enregistrer l'image
         $imagePath = $request->file('image')->store('projects/gallery', 'public');
         
-        // Créer l'entrée dans la base de données
         $projectImage = ProjectImage::create([
             'project_id' => $project->id,
             'image_path' => $imagePath,
@@ -42,10 +39,8 @@ class ProjectImageController extends Controller
         
         $this->authorize('update', $image->project);
         
-        // Supprimer le fichier
         Storage::disk('public')->delete($image->image_path);
         
-        // Supprimer l'entrée
         $image->delete();
         
         return redirect()->back()->with('success', 'L\'image a été supprimée.');

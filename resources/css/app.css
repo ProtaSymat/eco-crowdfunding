@@ -7,3 +7,16 @@ a{
 a:hover{
     text-decoration: underline !important;
 }
+
+.share-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.share-icon:hover {
+    transform: scale(1.1);
+}

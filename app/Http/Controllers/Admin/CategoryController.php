@@ -15,7 +15,6 @@ class CategoryController extends Controller
 
     public function create()
     {
-        // Correction: Utiliser le même format de chemin que les autres méthodes
         return view('account.admin.categories.create');
     }
 
@@ -40,7 +39,6 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        // Correction: Typo dans "sadmin"
         return view('account.admin.categories.edit', compact('category'));
     }
 

@@ -37,16 +37,30 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        //
+        if ($user->isAdmin()) {
+            return true;
+        }
+        if ($user->id === $project->user_id) {
+            return true;
+        }
+        
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Project $project): bool
-    {
-        //
+{
+    if ($user->isAdmin()) {
+        return true;
     }
+    if ($user->id === $project->user_id) {
+        return true;
+    }
+    
+    return false;
+}
 
     /**
      * Determine whether the user can restore the model.

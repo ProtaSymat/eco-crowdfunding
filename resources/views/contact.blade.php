@@ -1,18 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
-    <!-- Hero Section -->
     <div class="row mb-5">
-        <div class="col-12 text-center bg-success text-white p-5 rounded-3">
+        <div class="col-12 text-center text-success p-3 rounded-3">
             <h1 class="display-4 fw-bold">Contactez CleanIT</h1>
             <p class="lead">Ensemble, rendons notre planète plus propre et aidons ceux qui en ont besoin</p>
         </div>
     </div>
 
-    <!-- Contact Section -->
     <div class="row">
-        <!-- Contact Info -->
         <div class="col-md-5 mb-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -20,27 +16,28 @@
                     
                     <div class="d-flex mb-3">
                         <div class="me-3 text-success">
-                            <i class="fas fa-map-marker-alt fa-2x"></i>
+                            <i data-feather="map-pin" class="feather-sm"></i>
                         </div>
                         <div>
                             <h5>Adresse</h5>
-                            <p class="text-muted">25 Rue de l'Innovation<br>75011 Paris, France</p>
+                            <p class="text-muted">25 Rue du Renard<br>76000 Rouen, France</p>
                         </div>
                     </div>
                     
                     <div class="d-flex mb-3">
                         <div class="me-3 text-success">
-                            <i class="fas fa-phone fa-2x"></i>
+                        <i data-feather="phone" class="feather-sm"></i>
+
                         </div>
                         <div>
                             <h5>Téléphone</h5>
-                            <p class="text-muted">+33 (0)1 42 75 89 63</p>
+                            <p class="text-muted">+33 1 42 75 89 63</p>
                         </div>
                     </div>
                     
                     <div class="d-flex mb-3">
                         <div class="me-3 text-success">
-                            <i class="fas fa-envelope fa-2x"></i>
+                        <i data-feather="mail" class="feather-sm"></i>
                         </div>
                         <div>
                             <h5>Email</h5>
@@ -50,7 +47,8 @@
                     
                     <div class="d-flex mb-4">
                         <div class="me-3 text-success">
-                            <i class="fas fa-clock fa-2x"></i>
+                        <i data-feather="clock" class="feather-sm"></i>
+
                         </div>
                         <div>
                             <h5>Heures d'ouverture</h5>
@@ -61,17 +59,16 @@
                     <div class="mt-4">
                         <h5 class="mb-3">Suivez-nous</h5>
                         <div class="d-flex">
-                            <a href="#" class="btn btn-outline-success me-2"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="btn btn-outline-success me-2"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="btn btn-outline-success me-2"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="btn btn-outline-success"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="btn btn-outline-success me-2"><i data-feather="facebook" class="feather-sm"></i></a>
+                            <a href="#" class="btn btn-outline-success me-2"><i data-feather="twitter" class="feather-sm"></i></a>
+                            <a href="#" class="btn btn-outline-success me-2"><i data-feather="instagram" class="feather-sm"></i></a>
+                            <a href="#" class="btn btn-outline-success"><i data-feather="linkedin" class="feather-sm"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Contact Form -->
         <div class="col-md-7 mb-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -93,7 +90,7 @@
                             </div>
                             <div class="col-12">
                                 <label for="message" class="form-label">Message</label>
-                                <textarea class="form-control" id="message" rows="5" placeholder="Votre message" required></textarea>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Ca sert à rien d'envoyer j'ai pas codé la suite" required></textarea>
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
@@ -113,19 +110,28 @@
         </div>
     </div>
     
-    <!-- Map Section -->
     <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h3 class="card-title text-success mb-4">Nous trouver</h3>
-                    <div id="map" style="height: 400px;"></div>
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-success mb-4">Nous trouver</h3>
+                <div id="map" style="height: 400px;">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2644.0365170801423!2d1.056160376552738!3d49.429092871451885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e0de4c8ab08737%3A0x12c6b54cd7a17898!2s25%20Route%20de%20Renard%2C%2076100%20Rouen!5e0!3m2!1sfr!2sfr!4v1713003471887!5m2!1sfr!2sfr"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
     
-    <!-- Associations partenaires -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
@@ -133,34 +139,33 @@
                     <h3 class="card-title text-success mb-4">Nos associations partenaires</h3>
                     <div class="row row-cols-2 row-cols-md-4 g-4">
                         <div class="col">
-                            <div class="card h-100 border-0 shadow-sm">
+                            <div class="card h-100 border-0 shadow-sm bg-success text-white">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-hands-helping fa-3x text-success mb-3"></i>
+                                    <i data-feather="heart" class="feather-sm"></i>
                                     <h5>Les Restos du Cœur</h5>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card h-100 border-0 shadow-sm">
+                            <div class="card h-100 border-0 shadow-sm bg-success text-white">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                                <i data-feather="cloud-rain" class="feather-sm"></i>
                                     <h5>Greenpeace France</h5>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card h-100 border-0 shadow-sm">
+                            <div class="card h-100 border-0 shadow-sm bg-success text-white">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-trash-alt fa-3x text-success mb-3"></i>
+                                    <i data-feather="trash" class="feather-sm"></i>
                                     <h5>Clean Up France</h5>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card h-100 border-0 shadow-sm">
+                            <div class="card h-100 border-0 shadow-sm bg-success text-white">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-home fa-3x text-success mb-3"></i>
-                                    <h5>Fondation Abbé Pierre</h5>
+                                <i data-feather="home" class="feather-sm"></i>                                    <h5>Fondation Abbé Pierre</h5>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +174,6 @@
             </div>
         </div>
     </div>
-</div>
 
 @endsection
 
@@ -179,17 +183,14 @@
     document.addEventListener('DOMContentLoaded', function() {
         var map = L.map('map').setView([48.8588897, 2.3470599], 13);
         
-        // Ajout du layer OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
         
-        // Ajout du marqueur pour CleanIT
         L.marker([48.8588897, 2.3470599]).addTo(map)
             .bindPopup('<strong>CleanIT</strong><br>25 Rue de l\'Innovation<br>75011 Paris')
             .openPopup();
         
-        // Animation des éléments lors du défilement
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -204,7 +205,6 @@
 </script>
 
 <style>
-    /* Ajout de styles personnalisés */
     .card {
         transition: all 0.5s ease;
         border-radius: 10px;

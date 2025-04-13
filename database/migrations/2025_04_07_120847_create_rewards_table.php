@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->decimal('minimum_amount', 10, 2);
-            $table->integer('quantity')->nullable(); // limité ou illimité
+            $table->integer('quantity')->nullable();
             $table->integer('available')->nullable();
             $table->date('estimated_delivery')->nullable();
             $table->boolean('shipping_required')->default(false);

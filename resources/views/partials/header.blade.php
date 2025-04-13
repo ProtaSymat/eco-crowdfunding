@@ -1,23 +1,19 @@
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-4">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border border-bottom py-4">
         <div class="container">
-            <!-- Logo & Brand -->
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="me-2" height="30">
                 <span class="fw-bold">{{ config('app.name', 'CleanIT') }}</span>
             </a>
             
-            <!-- Mobile Toggle Button -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Navigation Content -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- Main Navigation -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item mx-1">
-                        <a class="nav-link" href="{{ route(name: 'projects.index') }}"></i>Projets</a>
+                        <a class="nav-link" href="{{ route(name: 'project.index') }}"></i>Projets</a>
                     </li>
                     <li class="nav-item mx-1">
                         <a class="nav-link" href="{{ route('about') }}">À propos</a>
@@ -27,7 +23,6 @@
                     </li>
                 </ul>
                 
-                <!-- Search Form -->
                 <form class="d-flex ms-auto my-2 my-lg-0 position-relative shadow-sm" style="max-width: 550px;">
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0">
@@ -37,10 +32,8 @@
                     </div>
                 </form>
                 
-                <!-- Right-side Navigation -->
                 <ul class="navbar-nav">
-                    <!-- Notifications -->
-                    <li class="nav-item mx-1 d-none d-lg-block">
+                    <li class="nav-item me-5 d-none d-lg-block">
                         <a class="nav-link position-relative" href="#" title="Notifications">
                             <i data-feather="bell" class="feather-sm"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -66,9 +59,13 @@
                     @else
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            <div class="avatar me-2 d-flex justify-content-center align-items-center">
-    <div class="rounded-circle border" style="width: 28px; height: 28px;"></div>
-</div>
+                            @if(Auth::user()->avatar)
+                            <img src="{{ asset(Auth::user()->avatar) }}" class="rounded-circle img-thumbnail" width="28" height="28" alt="Avatar">
+                        @else
+                            <div class="avatar-placeholder rounded-circle me-2 d-flex align-items-center justify-content-center bg-{{ Auth::user()->role === 'admin' ? 'danger' : (Auth::user()->role === 'creator' ? 'success' : 'primary') }} text-white" style="width: 28px; height: 28px; font-size: 0.75rem;">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                        @endif
                                 <span>{{ Auth::user()->name }}</span>
                             </a>
 
@@ -105,7 +102,6 @@
     </nav>
 </header>
 
-<!-- Script pour initialiser les icônes Feather -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof feather !== 'undefined') {

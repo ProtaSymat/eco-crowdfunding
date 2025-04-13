@@ -1,6 +1,4 @@
 <?php
-// 1. MODÈLES
-// app/Models/Project.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,16 +10,35 @@ class Project extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'category_id', 'name', 'slug', 'short_description', 
-        'description', 'funding_goal', 'min_contribution', 'duration', 
-        'start_date', 'end_date', 'status', 'cover_image', 'video_url', 'featured'
+        'user_id',
+        'category_id',
+        'name',
+        'slug',
+        'short_description',
+        'description',
+        'funding_goal',
+        'min_contribution',
+        'duration',
+        'start_date',
+        'end_date',
+        'status',
+        'cover_image',
+        'video_url',
+        'featured',
+        'total_collected',
     ];
+    
 
     protected $dates = [
-        'start_date', 'end_date', 'deleted_at'
+        'start_date',
+        'end_date',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
-    // Relations
+    
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -38,21 +55,41 @@ class Project extends Model
     }
 
     public function tags()
-    {
-        return $this->belongsToMany(Tag::class, 'project_tag');
-    }
+{
+    return $this->belongsToMany(Tag::class);
+}
 
     public function updates()
     {
         return $this->hasMany(ProjectUpdate::class)->orderBy('created_at', 'desc');
     }
 
-    // Accesseurs et mutateurs
-    public function getProgressPercentageAttribute()
+    public function comments()
     {
-        // Cette méthode sera implémentée quand vous aurez une table de contributions
-        return 0;
+        return $this->hasMany(Comment::class);
     }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    public function getProgressPercentageAttribute()
+{
+    if ($this->funding_goal > 0) {
+        $totalCollected = $this->total_collected ?? 0;
+        $percentage = ($totalCollected / $this->funding_goal) * 100;
+
+        return min(100, $percentage);
+    }
+
+    return 0;
+}
 
     public function getRemainingDaysAttribute()
     {
@@ -65,7 +102,6 @@ class Project extends Model
         return 0;
     }
 
-    // Scopes
     public function scopeFeatured($query)
     {
         return $query->where('featured', true);
@@ -77,4 +113,10 @@ class Project extends Model
                      ->where('start_date', '<=', now())
                      ->where('end_date', '>=', now());
     }
+
+
+public function contributions()
+{
+    return $this->hasMany(Contribution::class);
+}
 }

@@ -56,7 +56,7 @@ class ProjectUpdateController extends Controller
             'backers_only' => $validated['backers_only'] ?? $update->backers_only,
         ]);
         
-        return redirect()->route('projects.show', $update->project->slug)->with('success', 'La mise à jour du projet a été modifiée.');
+        return redirect()->route('project.show', $update->project->slug)->with('success', 'La mise à jour du projet a été modifiée.');
     }
     
     public function destroy($id)

@@ -8,9 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    
 
     /**
      * The attributes that are mass assignable.
@@ -61,5 +63,30 @@ class User extends Authenticatable
     
     public function interests() {
         return $this->hasMany(UserInterest::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un créateur.
+     *
+     * @return bool
+     */
+    public function isCreator()
+    {
+        return $this->role === 'creator';
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un backer.
+     *
+     * @return bool
+     */
+    public function isBacker()
+    {
+        return $this->role === 'backer';
     }
 }

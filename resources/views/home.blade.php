@@ -2,17 +2,15 @@
 
 @section('content')
 <div class="container">
-    <!-- Slider Section -->
     <div class="slider-container my-5">
         <div id="eco-slider" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-                <!-- Slide 1 -->
                 <div class="carousel-item active">
                     <div class="row align-items-center">
                         <div class="col-md-6">
                             <h2 class="slider-title">Financez l'avenir durable</h2>
                             <p class="slider-subtitle">Soutenez des projets écologiques innovants et participez à la transition énergétique</p>
-                            <a href="{{ route('projects.index') }}" class="btn btn-success mt-3">Découvrir les projets</a>
+                            <a href="{{ route('project.index') }}" class="btn btn-success mt-3">Découvrir les projets</a>
                         </div>
                         <div class="col-md-6">
                             <img src="{{ asset('images/slide-1.png') }}" class="img-fluid rounded" alt="Projets écologiques">
@@ -20,7 +18,6 @@
                     </div>
                 </div>
                 
-                <!-- Slide 2 -->
                 <div class="carousel-item">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -34,7 +31,6 @@
                     </div>
                 </div>
                 
-                <!-- Slide 3 -->
                 <div class="carousel-item">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -49,7 +45,6 @@
                 </div>
             </div>
             
-            <!-- Indicators -->
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#eco-slider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#eco-slider" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -117,20 +112,16 @@
       </div>
     </div>
 
-    <!-- Featured Projects Section (Vous pouvez ajouter plus de sections ici) -->
     <div class="row justify-content-center mt-5">
         <div class="col-md-12">
             <h3 class="text-center mb-4">Projets à la une</h3>
-            <!-- Ici vous pourriez ajouter vos projets en vedette -->
         </div>
     </div>
 </div>
 
-<!-- Script pour le slider -->
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialiser le carousel Bootstrap
         var slider = new bootstrap.Carousel(document.getElementById('eco-slider'), {
             interval: 5000,
             wrap: true
@@ -139,7 +130,6 @@
 </script>
 @endpush
 
-<!-- Style personnalisé pour le slider -->
 @push('styles')
 <style>
     .slider-container {

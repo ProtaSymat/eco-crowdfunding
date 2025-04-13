@@ -1,15 +1,13 @@
-<!-- resources/views/projects/index.blade.php -->
 @extends('layouts.app')
 
 @section('content')
 <div class="container py-5">
-    <!-- Hero Section -->
     <div class="row mb-5">
         <div class="col-12 text-center bg-success text-white p-5 rounded-3">
             <h1 class="display-4 fw-bold">Découvrez les projets</h1>
             <p class="lead">Soutenez des initiatives éco-responsables et aidez ceux qui en ont besoin</p>
             @auth
-                <a href="{{ route('projects.create') }}" class="btn btn-light btn-lg mt-3">
+                <a href="{{ route('project.create') }}" class="btn btn-light btn-lg mt-3">
                     <i class="fas fa-plus-circle me-2"></i>Proposer un projet
                 </a>
             @else
@@ -20,12 +18,11 @@
         </div>
     </div>
 
-    <!-- Filters Section -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <form action="{{ route('projects.index') }}" method="GET" class="row g-3">
+                    <form action="{{ route('project.index') }}" method="GET" class="row g-3">
                         <div class="col-md-3">
                             <label for="category" class="form-label">Catégorie</label>
                             <select class="form-select" name="category" id="category">
@@ -75,7 +72,7 @@
                             <button type="submit" class="btn btn-success px-4">
                                 <i class="fas fa-filter me-2"></i>Filtrer
                             </button>
-                            <a href="{{ route('projects.index') }}" class="btn btn-outline-secondary px-4 ms-2">
+                            <a href="{{ route('project.index') }}" class="btn btn-outline-secondary px-4 ms-2">
                                 <i class="fas fa-sync-alt me-2"></i>Réinitialiser
                             </a>
                         </div>
@@ -85,7 +82,6 @@
         </div>
     </div>
 
-    <!-- Featured Projects Carousel (si applicable) -->
     @if($projects->where('featured', true)->count() > 0 && request()->query->count() === 0)
     <div class="row mb-5">
         <div class="col-12">
@@ -127,7 +123,7 @@
                                             </div>
                                             
                                             <div class="mt-auto">
-                                                <a href="{{ route('projects.show', $featuredProject->slug) }}" 
+                                                <a href="{{ route('project.show', $featuredProject->slug) }}" 
                                                    class="btn btn-success btn-lg w-100">Découvrir ce projet</a>
                                             </div>
                                         </div>
@@ -150,12 +146,11 @@
     </div>
     @endif
 
-    <!-- Projects Grid -->
     <div class="row mb-4">
         <div class="col-12">
             <h2 class="mb-4">
                 {{ request()->query->count() > 0 ? 'Résultats de la recherche' : 'Tous les projets' }}
-                <small class="text-muted">({{ $projects->total() }} projets)</small>
+                <small class="text-muted">({{ $projects->total() }} projet(s))</small>
             </h2>
             
             @if($projects->isEmpty())
@@ -185,40 +180,44 @@
                             </div>
                             
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">{{ Str::limit($project->name, 40) }}</h5>
-                                <p class="card-text text-muted small">
-                                    <i class="fas fa-tag me-1"></i>{{ $project->category->name }}
-                                </p>
-                                <p class="card-text">{{ Str::limit($project->short_description, 100) }}</p>
-                                
-                                <div class="progress mb-3 mt-auto">
+                            <div class="progress mb-3 mt-auto">
                                     <div class="progress-bar bg-success" role="progressbar" 
-                                         style="width: {{ $project->progress_percentage }}%" 
-                                         aria-valuenow="{{ $project->progress_percentage }}" 
+                                         style="width: {{ number_format($project->progress_percentage, 0, ',', ' ') }}%" 
+                                         aria-valuenow="{{ number_format($project->progress_percentage, 0, ',', ' ') }}" 
                                          aria-valuemin="0" aria-valuemax="100">
-                                        {{ $project->progress_percentage }}%
+                                         {{ number_format($project->progress_percentage, 0, ',', ' ') }}%
                                     </div>
                                 </div>
+                                <h5 class="card-title">{{ Str::limit($project->name, 40) }}</h5>
+                                <p class="card-text">{{ Str::limit($project->short_description, 100) }}</p>
+                                
                                 
                                 <div class="d-flex justify-content-between mb-3">
-                                    <div>
-                                        <small class="text-muted">Objectif</small>
-                                        <p class="mb-0 fw-bold">{{ number_format($project->funding_goal, 0, ',', ' ') }} €</p>
+                                    <div class="text-muted d-flex flex-row align-items-end">
+                                        <i data-feather="clock" class="feather-sm me-1"></i>
+                                        <small class="me-2">Plus que {{ $project->remaining_days }} jours</small>
+                                        <small>Objectif : {{ number_format($project->funding_goal, 0, ',', ' ') }} €</small>
                                     </div>
-                                    <div class="text-end">
-                                        <small class="text-muted">Reste</small>
-                                        <p class="mb-0 fw-bold">{{ $project->remaining_days }} jours</p>
-                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="text-muted small border-rounded border">
+                                        <i class="fas fa-tag me-1"></i>{{ $project->category->name }}
+                                    </p>
                                 </div>
                                 
                                 <div class="d-flex align-items-center mt-auto">
-                                    <img src="{{ $project->user->profile_photo_url ?? 'https://via.placeholder.com/30' }}" 
-                                         class="rounded-circle me-2" width="30" height="30" 
-                                         alt="{{ $project->user->name }}">
+                                @if($project->user->avatar)
+                                <img src="{{ asset($project->user->avatar) }}" class="rounded-circle img-thumbnail" width="80" height="80" alt="Avatar">
+                                @else
+                                    <div class="avatar-placeholder rounded-circle me-2 d-flex align-items-center justify-content-center bg-{{ $project->user->role === 'admin' ? 'danger' : ($project->user->role === 'creator' ? 'success' : 'primary') }} text-white" style="width: 40px; height: 40px; font-size: 1rem;">
+                                        {{ strtoupper(substr($project->user->name, 0, 1)) }}
+                                    </div>
+                                @endif
                                     <span class="text-muted small">Par {{ $project->user->name }}</span>
                                 </div>
                                 
-                                <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-outline-success mt-3 w-100">
+                                <a href="{{ route('project.show', $project->slug) }}" class="btn btn-outline-success mt-3 w-100">
                                     Voir le projet
                                 </a>
                             </div>
@@ -227,14 +226,12 @@
                 @endforeach
             </div>
             
-            <!-- Pagination -->
             <div class="d-flex justify-content-center mt-5">
                 {{ $projects->appends(request()->query())->links() }}
             </div>
         </div>
     </div>
     
-    <!-- Call to Action -->
     <div class="row">
         <div class="col-12">
             <div class="card border-0 bg-light shadow-sm p-4 text-center">
@@ -242,7 +239,7 @@
                     <h3 class="mb-3">Vous avez un projet éco-responsable ?</h3>
                     <p class="mb-4">Lancez votre campagne de financement sur CleanIT et rejoignez notre communauté engagée pour un monde plus propre et plus juste.</p>
                     @auth
-                        <a href="{{ route('projects.create') }}" class="btn btn-success btn-lg px-4">
+                        <a href="{{ route('project.create') }}" class="btn btn-success btn-lg px-4">
                             <i class="fas fa-lightbulb me-2"></i>Lancer mon projet
                         </a>
                     @else
@@ -260,7 +257,6 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Animation sur les cartes des projets
         const projectCards = document.querySelectorAll('.project-card');
         
         projectCards.forEach(card => {
@@ -274,7 +270,6 @@
             });
         });
         
-        // Initialisation du carousel si présent
         if (document.getElementById('featuredCarousel')) {
             const carousel = new bootstrap.Carousel(document.getElementById('featuredCarousel'), {
                 interval: 5000,
@@ -287,7 +282,6 @@
 
 @section('styles')
 <style>
-    /* Styles pour les cartes de projet */
     .project-card {
         transition: all 0.3s ease;
     }
@@ -296,7 +290,6 @@
         box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
     }
     
-    /* Styles pour la pagination */
     .pagination {
         --bs-pagination-active-bg: #2ecc71;
         --bs-pagination-active-border-color: #2ecc71;
@@ -304,14 +297,12 @@
         --bs-pagination-hover-color: #27ae60;
     }
     
-    /* Animation pour le carousel */
     .carousel-item {
         transition: transform 0.6s ease-in-out;
     }
     
-    /* Style pour la barre de progression */
     .progress {
-        height: 10px;
+        height: 20px;
         border-radius: 5px;
     }
     
@@ -319,9 +310,8 @@
         background: linear-gradient(to right, #2ecc71, #1abc9c);
     }
     
-    /* Style pour les badges */
     .badge {
-        padding: 0.5em 0.8em;
+        padding: 1em 0.8em;
     }
 </style>
 @endsection

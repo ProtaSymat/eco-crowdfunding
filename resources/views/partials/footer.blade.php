@@ -70,9 +70,6 @@
               <img src="{{ asset('images/logo.png') }}" alt="Logo" height="25">
                 <span>CleanIT &copy; {{ date('Y') }}</span>
               </div>
-              <div class="d-flex align-items-center">
-                <!-- Lien réseaux sociaux ici -->
-              </div>
             </div>
           </div>
         </div>

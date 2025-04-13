@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('funding_goal', 12, 2);
             $table->decimal('min_contribution', 8, 2)->default(5.00);
-            $table->integer('duration')->default(30); // durée en jours
+            $table->integer('duration')->default(30);
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('status', ['draft', 'pending', 'active', 'completed', 'rejected'])->default('draft');

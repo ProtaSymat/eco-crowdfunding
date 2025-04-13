@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Category;
+use App\Models\Donation;
+use App\Models\Contribution;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -12,11 +14,11 @@ use Carbon\Carbon;
 
 class ProjectController extends Controller
 {
+    
     public function index(Request $request)
     {
         $query = Project::with(['category', 'user', 'tags']);
         
-        // Filtrage
         if ($request->has('category')) {
             $query->where('category_id', $request->category);
         }
@@ -54,7 +56,7 @@ class ProjectController extends Controller
         $categories = Category::all();
         $tags = Tag::all();
         
-        return view('projects.index', compact('projects', 'categories', 'tags'));
+        return view('project.index', compact('projects', 'categories', 'tags'));
     }
 
     public function show($slug)
@@ -63,7 +65,7 @@ class ProjectController extends Controller
             $query->where('backers_only', false)->orderBy('created_at', 'desc');
         }])->where('slug', $slug)->firstOrFail();
         
-        return view('projects.show', compact('project'));
+        return view('project.show', compact('project'));
     }
 
     public function create()
@@ -73,7 +75,7 @@ class ProjectController extends Controller
         $categories = Category::all();
         $tags = Tag::all();
         
-        return view('projects.create', compact('categories', 'tags'));
+        return view('project.create', compact('categories', 'tags'));
     }
 
     public function store(Request $request)
@@ -90,29 +92,23 @@ class ProjectController extends Controller
             'duration' => 'required|integer|min:1|max:60',
             'cover_image' => 'required|image|max:2048',
             'video_url' => 'nullable|url',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
+            'tags' => 'nullable|string',
         ]);
         
-        // Générer le slug à partir du nom
         $slug = Str::slug($validated['name']);
         $baseSlug = $slug;
         $counter = 1;
         
-        // S'assurer que le slug est unique
         while (Project::where('slug', $slug)->exists()) {
             $slug = $baseSlug . '-' . $counter;
             $counter++;
         }
         
-        // Calcul des dates de début et de fin
         $startDate = Carbon::now();
         $endDate = Carbon::now()->addDays($validated['duration']);
         
-        // Traitement de l'image de couverture
         $coverImagePath = $request->file('cover_image')->store('projects/covers', 'public');
         
-        // Création du projet
         $project = Project::create([
             'user_id' => Auth::id(),
             'category_id' => $validated['category_id'],
@@ -125,18 +121,31 @@ class ProjectController extends Controller
             'duration' => $validated['duration'],
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'status' => 'pending', // Par défaut en attente de validation
+            'status' => 'pending',
             'cover_image' => $coverImagePath,
             'video_url' => $validated['video_url'] ?? null,
-            'featured' => false, // Par défaut non mis en avant
+            'featured' => false,
+            'tags' => 'nullable|string',
+
         ]);
-        
-        // Associer les tags
-        if (isset($validated['tags'])) {
-            $project->tags()->sync($validated['tags']);
+        $tagIds = [];
+            
+        if (!empty($request->tags)) {
+            $tagNames = array_map('trim', explode(',', $request->tags));
+            
+            foreach ($tagNames as $name) {
+                if (!empty($name)) {
+                    $tag = Tag::firstOrCreate(
+                        ['name' => $name],
+                        ['slug' => Str::slug($name)]
+                    );
+                    $tagIds[] = $tag->id;
+                }
+            }
         }
         
-        return redirect()->route('projects.show', $project->slug)->with('success', 'Votre projet a été créé et est en attente de validation.');
+        return redirect()->route('project.show', $project->slug)
+            ->with('success', 'Votre projet a été créé et est en attente de validation.');
     }
 
     public function edit($slug)
@@ -148,7 +157,7 @@ class ProjectController extends Controller
         $categories = Category::all();
         $tags = Tag::all();
         
-        return view('projects.edit', compact('project', 'categories', 'tags'));
+        return view('project.edit', compact('project', 'categories', 'tags'));
     }
 
     public function update(Request $request, $slug)
@@ -170,7 +179,6 @@ class ProjectController extends Controller
             'tags.*' => 'exists:tags,id',
         ]);
         
-        // Ne mettre à jour le slug que si le nom a changé
         if ($project->name !== $validated['name']) {
             $slug = Str::slug($validated['name']);
             $baseSlug = $slug;
@@ -184,9 +192,7 @@ class ProjectController extends Controller
             $project->slug = $slug;
         }
         
-        // Traitement de la nouvelle image de couverture si fournie
         if ($request->hasFile('cover_image')) {
-            // Supprimer l'ancienne image
             if ($project->cover_image) {
                 Storage::disk('public')->delete($project->cover_image);
             }
@@ -195,7 +201,6 @@ class ProjectController extends Controller
             $project->cover_image = $coverImagePath;
         }
         
-        // Mise à jour des champs
         $project->category_id = $validated['category_id'];
         $project->name = $validated['name'];
         $project->short_description = $validated['short_description'];
@@ -205,14 +210,13 @@ class ProjectController extends Controller
         $project->video_url = $validated['video_url'] ?? null;
         $project->save();
         
-        // Mise à jour des tags
         if (isset($validated['tags'])) {
             $project->tags()->sync($validated['tags']);
         } else {
             $project->tags()->detach();
         }
         
-        return redirect()->route('projects.show', $project->slug)->with('success', 'Votre projet a été mis à jour.');
+        return redirect()->route('project.show', $project->slug)->with('success', 'Votre projet a été mis à jour.');
     }
 
     public function destroy($slug)
@@ -221,9 +225,78 @@ class ProjectController extends Controller
         
         $this->authorize('delete', $project);
         
-        // Soft delete du projet
         $project->delete();
         
-        return redirect()->route('projects.index')->with('success', 'Le projet a été supprimé.');
+        return redirect()->route('project.index')->with('success', 'Le projet a été supprimé.');
     }
+
+    public function myProjects()
+    {
+        $projects = Project::where('user_id', Auth::id())
+                        ->with(['category', 'tags'])
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(10);
+        
+        return view('project.my_project', compact('projects'));
+    }
+
+    public function support($slug)
+{
+    $project = Project::where('slug', $slug)->firstOrFail();
+    return view('project.support', compact('project'));
+}
+
+public function processSupport(Request $request, $slug)
+{
+    $project = Project::where('slug', $slug)->firstOrFail();
+
+    $request->validate([
+        'amount' => 'required|numeric|min:' . $project->min_contribution,
+        'card_name' => 'required|string|max:255',
+        'card_number' => 'required|string|max:19',
+        'expiry_date' => 'required|string|max:5',
+        'cvv' => 'required|string|max:4',
+    ]);
+    
+    $transactionId = 'TR' . time() . rand(1000, 9999);
+    
+    $contribution = new Contribution();
+    $contribution->user_id = auth()->id();
+    $contribution->project_id = $project->id;
+    $contribution->amount = $request->amount;
+    $contribution->status = 'completed';
+    $contribution->transaction_id = $transactionId;
+    $contribution->comment = $request->comment;
+    $contribution->anonymous = $request->has('anonymous') ? 1 : 0;
+    $contribution->payment_method = 'credit_card';
+    $contribution->save();
+    
+    $totalCollected = Contribution::where('project_id', $project->id)
+                                 ->where('status', 'completed')
+                                 ->sum('amount');
+    
+    $project->total_collected = $totalCollected;
+    
+    if ($totalCollected >= $project->funding_goal) {
+        $project->status = 'completed';
+    }
+    
+    $project->save();
+    
+    Donation::create([
+        'contribution_id' => $contribution->id
+    ]);
+    
+    return redirect()->route('project.supportSuccess', $project->slug)->with([
+        'success' => true,
+        'amount' => $request->amount,
+        'transaction_id' => $transactionId
+    ]);
+}
+
+public function supportSuccess($slug)
+{
+    $project = Project::where('slug', $slug)->firstOrFail();
+    return view('project.support-success', compact('project'));
+}
 }
