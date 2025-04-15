@@ -4,9 +4,6 @@
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
         <h3 class="mb-0">Tableau de bord administrateur</h3>
-        <a href="#" class="btn btn-primary">
-            <i data-feather="settings" class="feather-sm me-1"></i>Paramètres
-        </a>
     </div>
     <div class="card-body">
         @if(session('success'))
@@ -22,16 +19,6 @@
             </div>
         @endif
         
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white">
-                <h4 class="mb-0">Gestion des utilisateurs</h4>
-            </div>
-            <div class="card-body">
-                <a href="#" class="btn btn-success mb-3">
-                    <i data-feather="user-plus" class="feather-sm me-1"></i>Ajouter un utilisateur
-                </a>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

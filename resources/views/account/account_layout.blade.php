@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-md-3">
             <div class="card shadow-sm mb-4">
                 <div class="card-body text-center">
@@ -67,7 +66,7 @@
                     <a href="{{ route('profile.show') }}" class="list-group-item list-group-item-action {{ request()->routeIs('profile.show') ? 'active' : '' }}">
                         <i data-feather="user" class="feather-sm me-2"></i>Mon profil
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action {{ request()->routeIs('user.contributions') ? 'active' : '' }}">
+                    <a href="{{ route('user.contributions') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.contributions') ? 'active' : '' }}">
                         <i data-feather="dollar-sign" class="feather-sm me-2"></i>Mes contributions
                     </a>
                     
@@ -132,7 +131,6 @@
             @yield('account_content')
         </div>
     </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

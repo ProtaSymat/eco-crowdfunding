@@ -119,4 +119,9 @@ public function contributions()
 {
     return $this->hasMany(Contribution::class);
 }
+
+public function favoritedBy()
+{
+    return $this->belongsToMany(User::class, 'favorites');
+}
 }

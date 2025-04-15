@@ -102,33 +102,37 @@
                     <tbody>
                         @foreach($activeProjects as $project)
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        @if($project->thumbnail)
-                                            <img src="{{ asset($project->thumbnail) }}" class="rounded me-2" width="40" height="40" alt="{{ $project->title }}">
-                                        @else
-                                            <div class="bg-secondary rounded me-2 d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
-                                                <i data-feather="image" class="feather-sm"></i>
-                                            </div>
-                                        @endif
-                                        <div>
-                                            <h6 class="mb-0">{{ $project->title }}</h6>
-                                            <small class="text-muted">{{ $project->category->name }}</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ number_format($project->goal, 2) }} €</td>
-                                <td>{{ number_format($project->current_amount, 2) }} €</td>
-                                <td>
-                                    @php
-                                        $percentage = ($project->current_amount / $project->goal) * 100;
-                                        $percentageClass = $percentage < 30 ? 'danger' : ($percentage < 70 ? 'warning' : 'success');
-                                    @endphp
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-{{ $percentageClass }}" role="progressbar" style="width: {{ min($percentage, 100) }}%"></div>
-                                    </div>
-                                    <small class="text-muted">{{ number_format($percentage, 1) }}%</small>
-                                </td>
+                            <td>
+    <div class="d-flex align-items-center">
+        @if($project->cover_image)
+            <img src="{{ asset('storage/' . $project->cover_image) }}" class="rounded me-2" width="40" height="40" alt="{{ $project->name }}">
+        @else
+            <div class="bg-secondary rounded me-2 d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
+                <i data-feather="image" class="feather-sm"></i>
+            </div>
+        @endif
+        <div>
+            <h6 class="mb-0">{{ $project->name }}</h6>
+            <small class="text-muted">{{ $project->category->name }}</small>
+        </div>
+    </div>
+</td>
+<td>{{ number_format($project->funding_goal, 2) }} €</td>
+<td>{{ number_format($project->total_collected ?? 0, 2) }} €</td>
+<td>
+@php
+    if ($project->funding_goal > 0) {
+        $percentage = (($project->total_collected ?? 0) / $project->funding_goal) * 100;
+    } else {
+        $percentage = 0;
+    }
+    $percentageClass = $percentage < 30 ? 'danger' : ($percentage < 70 ? 'warning' : 'success');
+@endphp
+    <div class="progress" style="height: 6px;">
+        <div class="progress-bar bg-{{ $percentageClass }}" role="progressbar" style="width: {{ min($percentage, 100) }}%"></div>
+    </div>
+    <small class="text-muted">{{ number_format($percentage, 1) }}%</small>
+</td>
                                 <td>
                                     @php
                                         $daysLeft = \Carbon\Carbon::now()->diffInDays($project->end_date, false);
@@ -145,12 +149,6 @@
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ route('project.show', $project->slug) }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Voir">
                                             <i data-feather="eye" class="feather-sm"></i>
-                                        </a>
-                                        <a href="{{ route('creator.project.edit', $project->id) }}" class="btn btn-outline-warning" data-bs-toggle="tooltip" title="Modifier">
-                                            <i data-feather="edit" class="feather-sm"></i>
-                                        </a>
-                                        <a href="{{ route('creator.project.stats', $project->id) }}" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Statistiques">
-                                            <i data-feather="bar-chart-2" class="feather-sm"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -197,20 +195,22 @@
         @endif
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('contributionsChart').getContext('2d');
         
         const chartData = {
-            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+            labels: {!! json_encode($months) !!},
             datasets: [{
                 label: 'Contributions (€)',
-                data: [0, 0, 0, 0, 0, 0],
-                backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                data: {!! json_encode($contributionData) !!},
+             backgroundColor: 'rgba(40, 167, 69, 0.2)',
                 borderColor: 'rgba(40, 167, 69, 1)',
                 borderWidth: 2,
-                tension: 0.4
+                tension: 0.4,
+                fill: true
             }]
         };
         
@@ -237,48 +237,24 @@
                                 return context.dataset.label + ': ' + context.parsed.y + ' €';
                             }
                         }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                elements: {
+                    point: {
+                        radius: 4,
+                        hoverRadius: 6
                     }
                 }
             }
         });
-        
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
     });
 </script>
 
-<style>
-.timeline {
-    position: relative;
-    padding-left: 30px;
-}
-.timeline-item {
-    position: relative;
-    padding-bottom: 25px;
-}
-.timeline-item:last-child {
-    padding-bottom: 0;
-}
-.timeline-marker {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    left: -30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-.timeline-item:not(:last-child):before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 24px;
-    height: calc(100% - 24px);
-    width: 2px;
-    background-color: #e9ecef;
-}
-</style>
 @endsection

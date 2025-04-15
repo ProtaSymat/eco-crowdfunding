@@ -79,75 +79,75 @@ class ProjectController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $this->authorize('create', Project::class);
+{
+    $this->authorize('create', Project::class);
+    
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'category_id' => 'required|exists:categories,id',
+        'short_description' => 'required|string|max:255',
+        'description' => 'required|string',
+        'funding_goal' => 'required|numeric|min:1',
+        'min_contribution' => 'required|numeric|min:1',
+        'duration' => 'required|integer|min:1|max:60',
+        'cover_image' => 'required|image|max:2048',
+        'video_url' => 'nullable|url',
+        'tags' => 'nullable|string',
+    ]);
+    
+    $slug = Str::slug($validated['name']);
+    $baseSlug = $slug;
+    $counter = 1;
+    
+    while (Project::where('slug', $slug)->exists()) {
+        $slug = $baseSlug . '-' . $counter;
+        $counter++;
+    }
+    
+    $startDate = Carbon::now();
+    $endDate = Carbon::now()->addDays($validated['duration']);
+    
+    $coverImagePath = $request->file('cover_image')->store('projects/covers', 'public');
+    
+    $project = Project::create([
+        'user_id' => Auth::id(),
+        'category_id' => $validated['category_id'],
+        'name' => $validated['name'],
+        'slug' => $slug,
+        'short_description' => $validated['short_description'],
+        'description' => $validated['description'],
+        'funding_goal' => $validated['funding_goal'],
+        'min_contribution' => $validated['min_contribution'],
+        'duration' => $validated['duration'],
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+        'status' => 'pending',
+        'cover_image' => $coverImagePath,
+        'video_url' => $validated['video_url'] ?? null,
+        'featured' => false
+    ]);
+    
+    $tagIds = [];
         
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'short_description' => 'required|string|max:255',
-            'description' => 'required|string',
-            'funding_goal' => 'required|numeric|min:1',
-            'min_contribution' => 'required|numeric|min:1',
-            'duration' => 'required|integer|min:1|max:60',
-            'cover_image' => 'required|image|max:2048',
-            'video_url' => 'nullable|url',
-            'tags' => 'nullable|string',
-        ]);
+    if (!empty($request->tags)) {
+        $tagNames = array_map('trim', explode(',', $request->tags));
         
-        $slug = Str::slug($validated['name']);
-        $baseSlug = $slug;
-        $counter = 1;
-        
-        while (Project::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-        }
-        
-        $startDate = Carbon::now();
-        $endDate = Carbon::now()->addDays($validated['duration']);
-        
-        $coverImagePath = $request->file('cover_image')->store('projects/covers', 'public');
-        
-        $project = Project::create([
-            'user_id' => Auth::id(),
-            'category_id' => $validated['category_id'],
-            'name' => $validated['name'],
-            'slug' => $slug,
-            'short_description' => $validated['short_description'],
-            'description' => $validated['description'],
-            'funding_goal' => $validated['funding_goal'],
-            'min_contribution' => $validated['min_contribution'],
-            'duration' => $validated['duration'],
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'status' => 'pending',
-            'cover_image' => $coverImagePath,
-            'video_url' => $validated['video_url'] ?? null,
-            'featured' => false,
-            'tags' => 'nullable|string',
-
-        ]);
-        $tagIds = [];
-            
-        if (!empty($request->tags)) {
-            $tagNames = array_map('trim', explode(',', $request->tags));
-            
-            foreach ($tagNames as $name) {
-                if (!empty($name)) {
-                    $tag = Tag::firstOrCreate(
-                        ['name' => $name],
-                        ['slug' => Str::slug($name)]
-                    );
-                    $tagIds[] = $tag->id;
-                }
+        foreach ($tagNames as $name) {
+            if (!empty($name)) {
+                $tag = Tag::firstOrCreate(
+                    ['name' => $name],
+                    ['slug' => Str::slug($name)]
+                );
+                $tagIds[] = $tag->id;
             }
         }
         
-        return redirect()->route('project.show', $project->slug)
-            ->with('success', 'Votre projet a été créé et est en attente de validation.');
+        $project->tags()->sync($tagIds);
     }
-
+    
+    return redirect()->route('project.show', $project->slug)
+        ->with('success', 'Votre projet a été créé et est en attente de validation.');
+}
     public function edit($slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
@@ -298,5 +298,99 @@ public function supportSuccess($slug)
 {
     $project = Project::where('slug', $slug)->firstOrFail();
     return view('project.support-success', compact('project'));
+}
+public function creatorDashboard()
+{
+    $user = Auth::user();
+    $activeProjects = Project::where('user_id', $user->id)
+                            ->where(function($query) {
+                                $query->where('status', 'active')
+                                      ->orWhere('status', 'pending');
+                            })
+                            ->with('category')
+                            ->get();
+    
+    $projectsCount = Project::where('user_id', $user->id)->count();
+    
+    $totalFunds = Project::where('user_id', $user->id)
+                        ->sum('total_collected') ?? 0;
+    
+    $contributorsCount = Contribution::whereIn('project_id', 
+                                      Project::where('user_id', $user->id)
+                                            ->pluck('id'))
+                                    ->distinct('user_id')
+                                    ->count('user_id') ?? 0;
+    
+    $recentActivity = Contribution::whereIn('project_id', 
+                                  Project::where('user_id', $user->id)
+                                        ->pluck('id'))
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get()
+                                ->map(function($contribution) {
+                                    return (object)[
+                                        'type' => 'contribution',
+                                        'title' => 'Nouvelle contribution',
+                                        'description' => 'Contribution de ' . 
+                                                        ($contribution->anonymous ? 'Anonyme' : ($contribution->user->name ?? 'Utilisateur')) . 
+                                                        ' de ' . number_format($contribution->amount, 2) . ' € au projet ' .
+                                                        ($contribution->project->name ?? ''),
+                                        'created_at' => $contribution->created_at
+                                    ];
+                                });
+    
+    $sixMonthsAgo = Carbon::now()->subMonths(6)->startOfMonth();
+    $now = Carbon::now()->endOfMonth();
+    
+    $months = [];
+    $currentDate = clone $sixMonthsAgo;
+    
+    while ($currentDate <= $now) {
+        $months[] = $currentDate->format('M');
+        $currentDate->addMonth();
+    }
+    
+    $contributionsByMonth = Contribution::whereIn('project_id', 
+                                        Project::where('user_id', $user->id)->pluck('id'))
+                                    ->where('status', 'completed')
+                                    ->where('created_at', '>=', $sixMonthsAgo)
+                                    ->selectRaw('MONTH(created_at) as month, YEAR(created_at) as year, SUM(amount) as total')
+                                    ->groupBy('year', 'month')
+                                    ->orderBy('year')
+                                    ->orderBy('month')
+                                    ->get();
+    
+    $contributionData = [];
+    $currentDate = clone $sixMonthsAgo;
+    
+    while ($currentDate <= $now) {
+        $month = (int)$currentDate->format('m');
+        $year = (int)$currentDate->format('Y');
+        
+        $found = false;
+        foreach ($contributionsByMonth as $contribution) {
+            if ($contribution->month == $month && $contribution->year == $year) {
+                $contributionData[] = $contribution->total;
+                $found = true;
+                break;
+            }
+        }
+        
+        if (!$found) {
+            $contributionData[] = 0;
+        }
+        
+        $currentDate->addMonth();
+    }
+    
+    return view('account.account_creator', compact(
+        'activeProjects',
+        'projectsCount',
+        'totalFunds',
+        'contributorsCount',
+        'recentActivity',
+        'months',
+        'contributionData'
+    ));
 }
 }

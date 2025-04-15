@@ -34,7 +34,7 @@
                         </div>
                         <h3 class="mb-0">{{ $contributionsCount ?? 0 }}</h3>
                         <div class="mt-3">
-                            <a href="#" class="btn btn-sm btn-primary">Voir tout</a>
+                            <a href="{{ route('user.contributions') }}" class="btn btn-sm btn-primary">Voir tout</a>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         </div>
                         <h3 class="mb-0">{{ $favoritesCount ?? 0 }}</h3>
                         <div class="mt-3">
-                            <a href="#" class="btn btn-sm btn-warning">Voir tout</a>
+                            <a href="#" class="btn btn-sm btn-warning text-white">Voir tout</a>
                         </div>
                     </div>
                 </div>

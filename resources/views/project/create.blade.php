@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Accueil</a></li>
@@ -11,11 +10,9 @@
     </nav>
     
     <div class="mb-5">
-        <h1 class="display-5 fw-bold">Créer un nouveau projet</h1>
-    </div>
-    
-    <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+        <h1 class="display-5 fw-bold mb-5">Créer un nouveau projet</h1>
+
+    <form action="{{ route('project.store') }}" method="POST" enctype="multipart/form-data">        @csrf
         <div class="row">
             <div class="col-lg-8">
                 <div class="mb-3">
@@ -80,5 +77,5 @@
         
         <button type="submit" class="btn btn-success">Créer le projet</button>
     </form>
-</div>
+    </div>
 @endsection

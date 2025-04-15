@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Accueil</a></li>
@@ -12,8 +11,7 @@
     </nav>
     
     <div class="mb-5">
-        <h1 class="display-5 fw-bold">Modifier le projet</h1>
-    </div>
+        <h1 class="display-5 fw-bold mb-5">Modifier le projet</h1>
     
     <form action="{{ route('project.update', $project->slug) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -77,11 +75,11 @@
                 <div class="row mb-3">
                     <div class="col">
                         <label for="start_date" class="form-label">Date de début</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $project->start_date->format('Y-m-d') }}" required>
+                        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ \Carbon\Carbon::parse($project->start_date)->format('d/m/Y') }}" required>
                     </div>
                     <div class="col">
                         <label for="end_date" class="form-label">Date de fin</label>
-                        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $project->end_date->format('Y-m-d') }}" required>
+                        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ \Carbon\Carbon::parse($project->end_date)->format('d/m/Y') }}" required>
                     </div>
                 </div>
                 
@@ -103,5 +101,5 @@
             <a href="{{ route('project.show', $project->slug) }}" class="btn btn-secondary ms-2">Annuler</a>
         </div>
     </form>
-</div>
+    </div>
 @endsection

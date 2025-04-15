@@ -94,13 +94,13 @@ class UserController extends Controller
     public function showProfile() 
     {
         $user = Auth::user();
-        return view('account.profile_show', compact('user'));
+        return view('account.account_show', compact('user'));
     }
 
     public function editProfile() 
     {
         $user = Auth::user();
-        return view('account.profile_edit', compact('user'));
+        return view('account.account_edit', compact('user'));
     }
 
     public function updateProfile(Request $request)

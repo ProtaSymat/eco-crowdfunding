@@ -57,10 +57,6 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
     
-    public function likes() {
-        return $this->hasMany(Like::class);
-    }
-    
     public function interests() {
         return $this->hasMany(UserInterest::class);
     }
@@ -70,23 +66,23 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    /**
-     * Vérifie si l'utilisateur est un créateur.
-     *
-     * @return bool
-     */
     public function isCreator()
     {
         return $this->role === 'creator';
     }
 
-    /**
-     * Vérifie si l'utilisateur est un backer.
-     *
-     * @return bool
-     */
     public function isBacker()
     {
         return $this->role === 'backer';
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoriteProjects()
+    {
+        return $this->belongsToMany(Project::class, 'favorites');
     }
 }

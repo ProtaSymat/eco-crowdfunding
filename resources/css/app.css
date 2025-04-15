@@ -20,3 +20,120 @@ a:hover{
 .share-icon:hover {
     transform: scale(1.1);
 }
+
+.project-card {
+    transition: all 0.3s ease;
+}
+
+.project-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.pagination {
+    --bs-pagination-active-bg: #2ecc71;
+    --bs-pagination-active-border-color: #2ecc71;
+    --bs-pagination-color: #2ecc71;
+    --bs-pagination-hover-color: #27ae60;
+}
+
+.carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+.progress {
+    height: 20px;
+    border-radius: 5px;
+}
+
+.progress-bar {
+    background: linear-gradient(to right, #2ecc71, #1abc9c);
+}
+
+.badge {
+    padding: 1em 0.8em;
+}
+.favorite-icon {
+    stroke: currentColor;
+    transition: all 0.3s ease;
+}
+
+.fill-warning {
+    fill: #ffc107;
+}
+
+.favorite-btn {
+    z-index: 10;
+}
+
+.slider-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.slider-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.slider-subtitle {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+}
+
+.carousel-item {
+    padding: 2rem 0;
+}
+
+.carousel-indicators {
+    bottom: -10px;
+}
+
+.carousel-indicators button {
+    background-color: #27ae60;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+.timeline-item {
+    position: relative;
+    padding-bottom: 25px;
+}
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+.timeline-marker {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: -30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+.timeline-item:not(:last-child):before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 24px;
+    height: calc(100% - 24px);
+    width: 2px;
+    background-color: #e9ecef;
+}
+
+.card .feather {
+    width: 24px;
+    height: 24px;
+}
+.btn .feather-sm {
+    width: 16px;
+    height: 16px;
+}

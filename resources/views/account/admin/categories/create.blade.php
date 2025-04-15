@@ -1,7 +1,7 @@
-@extends('layouts.app') {{-- Assurez-vous que ce layout existe --}}
+@extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="mb-5">
     <h1>Ajouter une catégorie</h1>
     <form action="{{ route('admin.categories.store') }}" method="POST">
         @csrf

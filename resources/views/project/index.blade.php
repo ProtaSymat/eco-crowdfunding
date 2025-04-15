@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
     <div class="row mb-5">
         <div class="col-12 text-center bg-success text-white p-5 rounded-3">
             <h1 class="display-4 fw-bold">Découvrez les projets</h1>
@@ -163,21 +162,32 @@
                 @foreach($projects as $project)
                     <div class="col">
                         <div class="card h-100 border-0 shadow-sm project-card">
-                            <div class="position-relative">
-                                <img src="{{ asset('storage/' . $project->cover_image) }}" 
-                                     class="card-img-top" alt="{{ $project->name }}"
-                                     style="height: 200px; object-fit: cover;">
-                                     
-                                @if($project->featured)
-                                    <span class="position-absolute top-0 start-0 badge bg-warning m-2">
-                                        <i class="fas fa-star me-1"></i>En vedette
-                                    </span>
-                                @endif
-                                
-                                <span class="position-absolute top-0 end-0 badge bg-{{ $project->status === 'active' ? 'success' : ($project->status === 'pending' ? 'warning' : ($project->status === 'completed' ? 'primary' : 'danger')) }} m-2">
-                                    {{ $project->status === 'active' ? 'En cours' : ($project->status === 'pending' ? 'En attente' : ($project->status === 'completed' ? 'Financé' : 'Non financé')) }}
-                                </span>
-                            </div>
+                        <div class="position-relative">
+    <img src="{{ asset('storage/' . $project->cover_image) }}" 
+         class="card-img-top" alt="{{ $project->name }}"
+         style="height: 200px; object-fit: cover;">
+         
+    @if($project->featured)
+        <span class="position-absolute top-0 start-0 badge bg-warning m-2">
+            <i class="fas fa-star me-1"></i>En vedette
+        </span>
+    @endif
+    
+    <span class="position-absolute top-0 end-0 badge bg-{{ $project->status === 'active' ? 'success' : ($project->status === 'pending' ? 'warning' : ($project->status === 'completed' ? 'primary' : 'danger')) }} m-2">
+        {{ $project->status === 'active' ? 'En cours' : ($project->status === 'pending' ? 'En attente' : ($project->status === 'completed' ? 'Financé' : 'Non financé')) }}
+    </span>
+    
+    @auth
+    <div class="position-absolute top-0 start-0 ms-3 mt-3 favorite-btn" 
+         data-project-id="{{ $project->id }}"
+         role="button">
+        <i data-feather="star" 
+           class="favorite-icon {{ Auth::user()->favorites->contains('project_id', $project->id) ? 'text-warning fill-warning' : 'text-white' }}"
+           stroke-width="2"
+           style="cursor: pointer;"></i>
+    </div>
+    @endauth
+</div>
                             
                             <div class="card-body d-flex flex-column">
                             <div class="progress mb-3 mt-auto">
@@ -234,7 +244,7 @@
     
     <div class="row">
         <div class="col-12">
-            <div class="card border-0 bg-light shadow-sm p-4 text-center">
+            <div class="card border-0 bg-light p-4 text-center">
                 <div class="card-body">
                     <h3 class="mb-3">Vous avez un projet éco-responsable ?</h3>
                     <p class="mb-4">Lancez votre campagne de financement sur CleanIT et rejoignez notre communauté engagée pour un monde plus propre et plus juste.</p>
@@ -251,7 +261,6 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('scripts')
@@ -276,42 +285,49 @@
                 wrap: true
             });
         }
+        
+        const favoriteButtons = document.querySelectorAll('.favorite-btn');
+        favoriteButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const projectId = this.dataset.projectId;
+                const iconElement = this.querySelector('.favorite-icon');
+                
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                fetch(`/projects/${projectId}/favorite`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    if (data.status === 'added') {
+                        iconElement.classList.add('text-warning', 'fill-warning');
+                        iconElement.classList.remove('text-white');
+                    } else {
+                        iconElement.classList.remove('text-warning', 'fill-warning');
+                        iconElement.classList.add('text-white');
+                    }
+                    
+                    feather.replace();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
     });
 </script>
-@endsection
-
-@section('styles')
-<style>
-    .project-card {
-        transition: all 0.3s ease;
-    }
-    
-    .project-card:hover {
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
-    
-    .pagination {
-        --bs-pagination-active-bg: #2ecc71;
-        --bs-pagination-active-border-color: #2ecc71;
-        --bs-pagination-color: #2ecc71;
-        --bs-pagination-hover-color: #27ae60;
-    }
-    
-    .carousel-item {
-        transition: transform 0.6s ease-in-out;
-    }
-    
-    .progress {
-        height: 20px;
-        border-radius: 5px;
-    }
-    
-    .progress-bar {
-        background: linear-gradient(to right, #2ecc71, #1abc9c);
-    }
-    
-    .badge {
-        padding: 1em 0.8em;
-    }
-</style>
 @endsection

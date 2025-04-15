@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUpdateController;
 use App\Http\Controllers\ProjectImageController;
+use App\Http\Controllers\CreatorDashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\CategoryController;
 
 /*
@@ -29,8 +32,6 @@ Route::get('/', function () {
 
 Route::get('/about', function () { return view('about'); })->name('about');
 Route::get('/contact', function () { return view('contact'); })->name('contact');
-Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
-Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('project.show');
 
 // authentification
 Route::middleware(['auth'])->group(function () {
@@ -51,8 +52,12 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/update', [UserController::class, 'updateProfile'])->name('update');
         Route::post('/become-creator', [UserController::class, 'becomeCreator'])->name('become-creator');
         Route::get('/my-projects', [UserController::class, 'myProjects'])->name('my-projects');
+    Route::post('/projects/{project}/favorite', [FavoriteController::class, 'toggleFavorite'])->name('project.favorite.toggle');
     });
+    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('project.create');
+    Route::post('/projects', [ProjectController::class, 'store'])->name('project.store');
+    Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('project.show');
     Route::get('/projects/{slug}/edit', [ProjectController::class, 'edit'])->name('project.edit');
     Route::put('/projects/{slug}', [ProjectController::class, 'update'])->name('project.update');
     Route::delete('/projects/{slug}', [ProjectController::class, 'destroy'])->name('projects.destroy');
@@ -70,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{comment}', [CommentController::class, 'update'])->name('update');
         Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');
     });
+    Route::get('/account/contributions', [ContributionController::class, 'userContributions'])->name('user.contributions');
+    Route::get('/account/contributions/receipt/{id}', [ContributionController::class, 'downloadReceipt'])->name('user.contribution.receipt');
 });
 
 // créateurs
@@ -78,6 +85,14 @@ Route::middleware(['auth', 'creator'])->prefix('creator')->name('creator.')->gro
     Route::get('/projects', [ProjectController::class, 'myProjects'])->name('projects');
     Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
 });
+
+Route::get('/dashboard/creator', [CreatorDashboardController::class, 'index'])
+    ->name('creator.dashboard')
+    ->middleware(['auth']);
+
+Route::get('/dashboard/creator', [ProjectController::class, 'creatorDashboard'])
+->name('creator.dashboard')
+->middleware(['auth']);
 
 // administrateurs
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -90,6 +105,3 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::get('/project/{slug}/support', [App\Http\Controllers\ProjectController::class, 'support'])->name('project.support')->middleware('auth');
 Route::post('/project/{slug}/support', [App\Http\Controllers\ProjectController::class, 'processSupport'])->name('project.processSupport')->middleware('auth');
 Route::get('/project/{slug}/support/success', [App\Http\Controllers\ProjectController::class, 'supportSuccess'])->name('project.supportSuccess')->middleware('auth');
-
-// Route pour voir les contributions de l'utilisateur
-Route::get('/user/contributions', [App\Http\Controllers\UserController::class, 'contributions'])->name('user.contributions')->middleware('auth');

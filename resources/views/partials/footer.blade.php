@@ -76,18 +76,16 @@
       </div>
     </div>
   </div>
-  <div class="pt-4">
+  <div class="pt-4 bg-success">
     <div class="container">
       <div class="row">
-        <div class="col-12">
-          <section class="section_footer-legal">
+          <section class="col-12">
             <ul class="d-flex flex-wrap list-unstyled">
-              <li class="me-4 mb-2 mb-sm-0"><a href="#" class="text-dark text-decoration-none">Confidentialité</a></li>
-              <li class="me-4 mb-2 mb-sm-0"><a href="#" class="text-dark text-decoration-none">CGU</a></li>
-              <li class="me-4 mb-2 mb-sm-0"><a href="#" class="text-dark text-decoration-none">Cookies</a></li>
+              <li class="me-4 mb-2 mb-sm-0"><a href="#" class="text-white text-decoration-none">Confidentialité</a></li>
+              <li class="me-4 mb-2 mb-sm-0"><a href="#" class="text-white text-decoration-none">CGU</a></li>
+              <li class="me-4 mb-2 mb-sm-0"><a href="#" class="text-white text-decoration-none">Cookies</a></li>
             </ul>
           </section>
-        </div>
       </div>
     </div>
   </div>
