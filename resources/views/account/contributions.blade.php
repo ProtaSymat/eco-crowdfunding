@@ -99,7 +99,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         @if($contribution->project->cover_image)
-                                            <img src="{{ asset($contribution->project->cover_image) }}" class="rounded me-2" width="40" height="40" alt="{{ $contribution->project->name }}">
+                                            <img src="{{ asset('storage/' . $contribution->project->cover_image) }}" class="rounded me-2" width="40" height="40" alt="{{ $contribution->project->name }}">
                                         @else
                                             <div class="bg-secondary rounded me-2 d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
                                                 <i data-feather="image" class="feather-sm"></i>
@@ -143,7 +143,6 @@
                                         @endif
                                     </div>
                                     
-                                    <!-- Receipt Modal -->
                                     @if($contribution->status == 'completed')
                                     <div class="modal fade" id="receiptModal{{ $contribution->id }}" tabindex="-1" aria-labelledby="receiptModalLabel{{ $contribution->id }}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">

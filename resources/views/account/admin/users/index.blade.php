@@ -1,18 +1,14 @@
-@extends('layouts.app')
+@extends('account.account_layout')
 
-@section('content')
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <h1>Gestion des Utilisateurs</h1>
-        </div>
-        <div class="col-md-6 text-end">
-            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+@section('account_content')
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h1 class="mb-0">Gestion des utilisateurs</h1>
+        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Ajouter un utilisateur
             </a>
-        </div>
     </div>
-
+    <div class="card-body">
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -45,13 +41,13 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm btn-info">
-                                            <i class="bi bi-eye"></i> Voir
+                                            <i data-feather="eye" class="text-white"></i>
                                         </a>
                                         <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning">
-                                            <i class="bi bi-pencil"></i> Modifier
+                                        <i data-feather="edit" class="text-white"></i>
                                         </a>
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $user->id }}">
-                                            <i class="bi bi-trash"></i> Supprimer
+                                        <i data-feather="trash" class="text-white"></i>
                                         </button>
                                     </div>
 
@@ -90,6 +86,7 @@
             <div class="d-flex justify-content-center">
                 {{ $users->links() }}
             </div>
+        </div>
         </div>
     </div>
 </div>

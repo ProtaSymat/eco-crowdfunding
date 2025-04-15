@@ -1,8 +1,12 @@
-@extends('layouts.app')
+@extends('account.account_layout')
 
-@section('content')
-<div class="container">
-    <h1>Modifier la catégorie : {{ $category->name }}</h1>
+@section('account_content')
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h1 class="me-4">Modifier la catégorie : {{ $category->name }}</h1>
+    </div>
+    <div class="card-body">
+
     <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -24,5 +28,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Mettre à jour</button>
     </form>
+    </div>
 </div>
 @endsection

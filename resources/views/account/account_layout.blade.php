@@ -69,13 +69,20 @@
                     <a href="{{ route('user.contributions') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.contributions') ? 'active' : '' }}">
                         <i data-feather="dollar-sign" class="feather-sm me-2"></i>Mes contributions
                     </a>
+                    <a href="{{ route('user.favoris') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.contributions') ? 'active' : '' }}">
+                        <i data-feather="star" class="feather-sm me-2"></i>Mes favoris
+                    </a>
                     
                     @if(Auth::user()->role === 'backer')
-                    <button onclick="document.getElementById('become-creator-form').submit();">Devenir Créateur</button>
+                        <button 
+                            onclick="document.getElementById('become-creator-form').submit();" 
+                            class="border-0 bg-success text-white px-4 d-flex align-items-center justify-content-center gap-2 border-radius-0">
+                            Devenir Créateur
+                        </button>
 
-                    <form id="become-creator-form" action="{{ route('profile.become-creator') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
+                        <form id="become-creator-form" action="{{ route('profile.become-creator') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     @endif
                     
                     @if(Auth::user()->role === 'creator' || Auth::user()->role === 'admin')

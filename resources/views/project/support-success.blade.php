@@ -8,7 +8,7 @@
                     <div class="card-body text-center py-5">
                         <div class="mb-4">
                             <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="fas fa-check fa-3x"></i>
+                            <i data-feather="check" class="feather-sm"></i>
                             </div>
                         </div>
                         
@@ -31,29 +31,26 @@
                     </div>
                 </div>
                 
-                <div class="card border-0 shadow-sm mt-4">
+                <div class="card border-0 mt-4">
                     <div class="card-body text-center py-4">
                         <h5 class="mb-3">Partagez ce projet pour aider à atteindre l'objectif</h5>
                         <div class="d-flex justify-content-center gap-3">
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('project.show', $project->slug)) }}" target="_blank" class="text-decoration-none">
                                 <div class="share-icon bg-primary text-white rounded-circle p-3">
-                                    <i class="fab fa-facebook-f fa-lg"></i>
+                                <i data-feather="facebook" class="feather-sm"></i>
                                 </div>
                             </a>
                             <a href="https://twitter.com/intent/tweet?text={{ urlencode($project->name) }}&url={{ urlencode(route('project.show', $project->slug)) }}" target="_blank" class="text-decoration-none">
                                 <div class="share-icon bg-info text-white rounded-circle p-3">
-                                    <i class="fab fa-twitter fa-lg"></i>
-                                </div>
+                                <i data-feather="twitter" class="feather-sm"></i>                                </div>
                             </a>
                             <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('project.show', $project->slug)) }}&title={{ urlencode($project->name) }}" target="_blank" class="text-decoration-none">
                                 <div class="share-icon bg-primary text-white rounded-circle p-3" style="background-color: #0077b5;">
-                                    <i class="fab fa-linkedin-in fa-lg"></i>
-                                </div>
+                                <i data-feather="linkedin" class="feather-sm"></i>                                </div>
                             </a>
                             <a href="mailto:?subject={{ urlencode('Découvrez ce projet: ' . $project->name) }}&body={{ urlencode('Bonjour, je viens de soutenir ce projet et je pense qu\'il pourrait vous intéresser: ' . route('project.show', $project->slug)) }}" class="text-decoration-none">
                                 <div class="share-icon bg-danger text-white rounded-circle p-3">
-                                    <i class="fas fa-envelope fa-lg"></i>
-                                </div>
+                                <i data-feather="mail" class="feather-sm"></i>                                </div>
                             </a>
                         </div>
                     </div>

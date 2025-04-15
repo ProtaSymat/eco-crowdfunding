@@ -1,17 +1,15 @@
-@extends('layouts.app')
+@extends('account.account_layout')
 
-@section('content')
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <h1>Ajouter un utilisateur</h1>
-        </div>
-        <div class="col-md-6 text-end">
-            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+@section('account_content')
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h1 class="mb-0">Modifier l'utilisateur</h1>
+        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Retour à la liste
             </a>
-        </div>
     </div>
+    <div class="card-body">
+
 
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -82,5 +80,6 @@
             </form>
         </div>
     </div>
+</div>
 </div>
 @endsection

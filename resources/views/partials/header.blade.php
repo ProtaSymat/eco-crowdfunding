@@ -33,7 +33,7 @@
                 </form>
                 
                 <ul class="navbar-nav">
-                    <li class="nav-item me-5 d-none d-lg-block">
+                    <li class="nav-item ms-3 me-5 d-none d-lg-block">
                         <a class="nav-link position-relative" href="#" title="Notifications">
                             <i data-feather="bell" class="feather-sm"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

@@ -151,7 +151,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const cardNumberInput = document.getElementById('card_number');
@@ -192,4 +192,4 @@
         });
     });
 </script>
-@endsection
+@endpush

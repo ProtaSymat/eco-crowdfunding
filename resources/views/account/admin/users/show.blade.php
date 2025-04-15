@@ -1,13 +1,10 @@
-@extends('layouts.app')
+@extends('account.account_layout')
 
-@section('content')
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <h1>Détails de l'utilisateur</h1>
-        </div>
-        <div class="col-md-6 text-end">
-            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+@section('account_content')
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h1 class="mb-0">Modifier l'utilisateur</h1>
+        <div><a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Retour à la liste
             </a>
             <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning">
@@ -15,9 +12,10 @@
             </a>
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                 <i class="bi bi-trash"></i> Supprimer
-            </button>
-        </div>
+            </button></div>
     </div>
+    <div class="card-body">
+
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -99,5 +97,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection

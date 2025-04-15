@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Contribution;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,4 +29,35 @@ class FavoriteController extends Controller
             return response()->json(['status' => 'added']);
         }
     }
+
+    public function userFavoris()
+{
+    $user = Auth::user();
+
+    $favorites = Favorite::where('user_id', $user->id)
+                        ->with('project')
+                        ->latest()
+                        ->get();
+    
+                        $contributionsCount = Contribution::where('user_id', $user->id)->count();
+    
+                        // Compter les favoris
+                        $favoritesCount = Favorite::where('user_id', $user->id)->count();
+                        
+                        // Récupérer les contributions récentes
+                        $recentContributions = Contribution::where('user_id', $user->id)
+                                                ->with('project')
+                                                ->latest()
+                                                ->take(4)
+                                                ->get();
+                        
+                        return view('account.favoris', compact(
+                            'contributionsCount',
+                            'favorites',
+                            'favoritesCount', 
+                            'recentContributions'
+                        ));
+
+    return view('account.favoris', compact('favorites'));
+}
 }

@@ -263,7 +263,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const projectCards = document.querySelectorAll('.project-card');
@@ -285,15 +285,15 @@
                 wrap: true
             });
         }
-        
+
         const favoriteButtons = document.querySelectorAll('.favorite-btn');
         favoriteButtons.forEach(btn => {
             btn.addEventListener('click', function(e) {
+                console.log('test');
                 e.preventDefault();
                 e.stopPropagation();
                 const projectId = this.dataset.projectId;
                 const iconElement = this.querySelector('.favorite-icon');
-                
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 
                 fetch(`/projects/${projectId}/favorite`, {
@@ -330,4 +330,4 @@
         });
     });
 </script>
-@endsection
+@endpush

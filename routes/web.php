@@ -6,11 +6,13 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUpdateController;
 use App\Http\Controllers\ProjectImageController;
 use App\Http\Controllers\CreatorDashboardController;
+use App\Http\Controllers\BackerDashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Models\Contribution;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,8 @@ Route::middleware(['auth'])->group(function () {
         };
     })->name('dashboard');
     Route::get('/account', function () { return view('account.account_backer'); })->name('backer.dashboard');
-    
+    Route::post('/projects/{project}/favorite', [FavoriteController::class, 'toggleFavorite'])->name('project.favorite.toggle');
+
     // profil
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [UserController::class, 'showProfile'])->name('show');
@@ -52,7 +55,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/update', [UserController::class, 'updateProfile'])->name('update');
         Route::post('/become-creator', [UserController::class, 'becomeCreator'])->name('become-creator');
         Route::get('/my-projects', [UserController::class, 'myProjects'])->name('my-projects');
-    Route::post('/projects/{project}/favorite', [FavoriteController::class, 'toggleFavorite'])->name('project.favorite.toggle');
     });
     Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('project.create');
@@ -76,6 +78,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');
     });
     Route::get('/account/contributions', [ContributionController::class, 'userContributions'])->name('user.contributions');
+    Route::get('/account/favoris', [FavoriteController::class, 'userFavoris'])->name('user.favoris');
     Route::get('/account/contributions/receipt/{id}', [ContributionController::class, 'downloadReceipt'])->name('user.contribution.receipt');
 });
 
@@ -90,8 +93,20 @@ Route::get('/dashboard/creator', [CreatorDashboardController::class, 'index'])
     ->name('creator.dashboard')
     ->middleware(['auth']);
 
+Route::get('/dashboard/backer', [BackerDashboardController::class, 'index'])
+    ->name('backer.dashboard')
+    ->middleware(['auth']);
+
 Route::get('/dashboard/creator', [ProjectController::class, 'creatorDashboard'])
 ->name('creator.dashboard')
+->middleware(['auth']);
+
+Route::get('/dashboard/backer', [FavoriteController::class, 'backerDashboard'])
+->name('backer.dashboard')
+->middleware(['auth']);
+
+Route::get('/dashboard/backer', [ContributionController::class, 'backerDashboard'])
+->name('backer.dashboard')
 ->middleware(['auth']);
 
 // administrateurs
