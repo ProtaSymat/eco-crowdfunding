@@ -27,12 +27,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Installer les dépendances et construire l'application
+# Installer les dépendances
 RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
 
 # Exposer le port Apache
 EXPOSE 80
@@ -40,5 +37,8 @@ EXPOSE 80
 # Configurer Apache pour qu'il pointe vers public/
 RUN sed -i -e "s/DocumentRoot \/var\/www\/html/DocumentRoot \/var\/www\/html\/public/" /etc/apache2/sites-available/000-default.conf
 
-# Copier les fichiers .env à partir des variables d'environnement
-CMD php artisan migrate --force && apache2-foreground
+# Script de démarrage pour configurer et lancer l'application
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["/usr/local/bin/start.sh"]
