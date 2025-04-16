@@ -79,7 +79,8 @@ class AdminProjectController extends Controller
                 Storage::delete($project->cover_image);
             }
             
-            $path = $request->file('cover_image')->store('projects/cover_image', 'public');
+            $path = $request->file('image')->store('img/projects/covers', 'direct_public');
+
             $validated['cover_image'] = 'storage/' . $path;
         }
         
