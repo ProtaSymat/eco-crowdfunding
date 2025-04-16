@@ -7,11 +7,11 @@
             <p class="lead">Soutenez des initiatives éco-responsables et aidez ceux qui en ont besoin</p>
             @auth
                 <a href="{{ route('project.create') }}" class="btn btn-light btn-lg mt-3">
-                    <i class="fas fa-plus-circle me-2"></i>Proposer un projet
+                    Proposer un projet
                 </a>
             @else
                 <a href="{{ route('login') }}" class="btn btn-light btn-lg mt-3">
-                    <i class="fas fa-sign-in-alt me-2"></i>Connectez-vous pour proposer un projet
+                    Connectez-vous pour proposer un projet
                 </a>
             @endauth
         </div>
@@ -69,10 +69,10 @@
                         
                         <div class="col-12 text-center">
                             <button type="submit" class="btn btn-success px-4">
-                                <i class="fas fa-filter me-2"></i>Filtrer
+                                Filtrer
                             </button>
                             <a href="{{ route('project.index') }}" class="btn btn-outline-secondary px-4 ms-2">
-                                <i class="fas fa-sync-alt me-2"></i>Réinitialiser
+                                Réinitialiser
                             </a>
                         </div>
                     </form>
@@ -154,7 +154,7 @@
             
             @if($projects->isEmpty())
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>Aucun projet ne correspond à vos critères de recherche.
+                    Aucun projet ne correspond à vos critères de recherche.
                 </div>
             @endif
             
@@ -169,7 +169,7 @@
          
     @if($project->featured)
         <span class="position-absolute top-0 start-0 badge bg-warning m-2">
-            <i class="fas fa-star me-1"></i>En vedette
+            En vedette
         </span>
     @endif
     
@@ -212,7 +212,7 @@
 
                                 <div>
                                     <p class="text-muted small border-rounded border">
-                                        <i class="fas fa-tag me-1"></i>{{ $project->category->name }}
+                                        {{ $project->category->name }}
                                     </p>
                                 </div>
                                 
@@ -250,11 +250,11 @@
                     <p class="mb-4">Lancez votre campagne de financement sur CleanIT et rejoignez notre communauté engagée pour un monde plus propre et plus juste.</p>
                     @auth
                         <a href="{{ route('project.create') }}" class="btn btn-success btn-lg px-4">
-                            <i class="fas fa-lightbulb me-2"></i>Lancer mon projet
+                            Lancer mon projet
                         </a>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-success btn-lg px-4">
-                            <i class="fas fa-sign-in-alt me-2"></i>Se connecter pour proposer un projet
+                            Se connecter pour proposer un projet
                         </a>
                     @endauth
                 </div>

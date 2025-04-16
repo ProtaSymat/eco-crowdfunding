@@ -41,10 +41,8 @@ class FavoriteController extends Controller
     
                         $contributionsCount = Contribution::where('user_id', $user->id)->count();
     
-                        // Compter les favoris
                         $favoritesCount = Favorite::where('user_id', $user->id)->count();
                         
-                        // Récupérer les contributions récentes
                         $recentContributions = Contribution::where('user_id', $user->id)
                                                 ->with('project')
                                                 ->latest()

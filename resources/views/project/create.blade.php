@@ -12,7 +12,8 @@
     <div class="mb-5">
         <h1 class="display-5 fw-bold mb-5">Créer un nouveau projet</h1>
 
-    <form action="{{ route('project.store') }}" method="POST" enctype="multipart/form-data">        @csrf
+        <form action="{{ route('project.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
         <div class="row">
             <div class="col-lg-8">
                 <div class="mb-3">
@@ -44,6 +45,11 @@
                     <label for="cover_image" class="form-label">Image de couverture</label>
                     <input type="file" class="form-control" id="cover_image" name="cover_image" accept="image/*" required>
                 </div>
+
+                <div class="mb-3">
+                    <label for="video_url" class="form-label">Vidéo</label>
+                    <input type="text" class="form-control" id="video_url" name="video_url">
+                </div>
                 
                 <div class="mb-3">
                     <label for="tags" class="form-label">Tags (séparés par des virgules)</label>
@@ -72,6 +78,7 @@
                         <input type="date" class="form-control" id="end_date" name="end_date" required>
                     </div>
                 </div>
+                
             </div>
         </div>
         

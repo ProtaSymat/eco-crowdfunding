@@ -12,8 +12,9 @@ use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\AdminProjectController;
+use App\Http\Controllers\AdminContributionController;
 use App\Models\Contribution;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -115,6 +116,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/projects', function () { return view('admin_projects'); })->name('projects');
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);
+    Route::get('/projects', [AdminProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/{id}', [AdminProjectController::class, 'show'])->name('projects.show');
+    Route::get('/projects/{id}/edit', [AdminProjectController::class, 'edit'])->name('projects.edit');
+    Route::put('/projects/{id}', [AdminProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/projects/{id}', [AdminProjectController::class, 'destroy'])->name('projects.destroy');
+    Route::patch('/projects/{id}/status', [AdminProjectController::class, 'changeStatus'])->name('projects.status');
+    
+    Route::get('/contributions', [AdminContributionController::class, 'index'])->name('contributions.index');
+    Route::get('/contributions/report', [AdminContributionController::class, 'generateReport'])->name('contributions.report');
+    Route::get('/contributions/{id}', [AdminContributionController::class, 'show'])->name('contributions.show');
+    
 });
 
 Route::get('/project/{slug}/support', [App\Http\Controllers\ProjectController::class, 'support'])->name('project.support')->middleware('auth');

@@ -107,7 +107,7 @@
                             @endif
                             
                             <a href="{{ route('project.show', $contribution->project->slug) }}" class="btn btn-view-project w-100">
-                                <i class="fas fa-eye me-2"></i>Voir le projet
+                                Voir le projet
                             </a>
                         </div>
                     </div>
@@ -186,7 +186,6 @@
         margin-bottom: 15px;
         color: #333;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         height: 48px;

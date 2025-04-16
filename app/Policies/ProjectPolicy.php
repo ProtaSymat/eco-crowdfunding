@@ -29,7 +29,14 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        if ($user->isAdmin()) {
+            return true;
+        }
+        if ($user->isCreator()) {
+            return true;
+        }
+        
+        return false;
     }
 
     /**

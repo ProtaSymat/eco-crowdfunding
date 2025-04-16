@@ -59,6 +59,8 @@ class ProjectController extends Controller
         return view('project.index', compact('projects', 'categories', 'tags'));
     }
 
+
+
     public function show($slug)
     {
         $project = Project::with(['user', 'category', 'tags', 'images', 'updates' => function($query) {
@@ -67,6 +69,8 @@ class ProjectController extends Controller
         
         return view('project.show', compact('project'));
     }
+
+
 
     public function create()
     {
@@ -78,76 +82,82 @@ class ProjectController extends Controller
         return view('project.create', compact('categories', 'tags'));
     }
 
+
     public function store(Request $request)
-{
-    $this->authorize('create', Project::class);
-    
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'short_description' => 'required|string|max:255',
-        'description' => 'required|string',
-        'funding_goal' => 'required|numeric|min:1',
-        'min_contribution' => 'required|numeric|min:1',
-        'duration' => 'required|integer|min:1|max:60',
-        'cover_image' => 'required|image|max:2048',
-        'video_url' => 'nullable|url',
-        'tags' => 'nullable|string',
-    ]);
-    
-    $slug = Str::slug($validated['name']);
-    $baseSlug = $slug;
-    $counter = 1;
-    
-    while (Project::where('slug', $slug)->exists()) {
-        $slug = $baseSlug . '-' . $counter;
-        $counter++;
-    }
-    
-    $startDate = Carbon::now();
-    $endDate = Carbon::now()->addDays($validated['duration']);
-    
-    $coverImagePath = $request->file('cover_image')->store('projects/covers', 'public');
-    
-    $project = Project::create([
-        'user_id' => Auth::id(),
-        'category_id' => $validated['category_id'],
-        'name' => $validated['name'],
-        'slug' => $slug,
-        'short_description' => $validated['short_description'],
-        'description' => $validated['description'],
-        'funding_goal' => $validated['funding_goal'],
-        'min_contribution' => $validated['min_contribution'],
-        'duration' => $validated['duration'],
-        'start_date' => $startDate,
-        'end_date' => $endDate,
-        'status' => 'pending',
-        'cover_image' => $coverImagePath,
-        'video_url' => $validated['video_url'] ?? null,
-        'featured' => false
-    ]);
-    
-    $tagIds = [];
+    {
+        $this->authorize('create', Project::class);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'short_description' => 'required|string|max:255',
+            'description' => 'required|string',
+            'funding_goal' => 'required|numeric|min:1',
+            'min_contribution' => 'required|numeric|min:1',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'cover_image' => 'required|image|max:2048',
+            'video_url' => 'nullable|string',
+            'tags' => 'nullable|string',
+        ]);
+
+        $slug = Str::slug($validated['name']);
+        $baseSlug = $slug;
+        $counter = 1;
         
-    if (!empty($request->tags)) {
-        $tagNames = array_map('trim', explode(',', $request->tags));
         
-        foreach ($tagNames as $name) {
-            if (!empty($name)) {
-                $tag = Tag::firstOrCreate(
-                    ['name' => $name],
-                    ['slug' => Str::slug($name)]
-                );
-                $tagIds[] = $tag->id;
-            }
+        while (Project::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
         }
         
-        $project->tags()->sync($tagIds);
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
+        $duration = $endDate->diffInDays($startDate);
+        
+        $coverImagePath = $request->file('cover_image')->store('projects/covers', 'public');
+        
+        $project = Project::create([
+            'user_id' => Auth::id(),
+            'category_id' => $validated['category_id'],
+            'name' => $validated['name'],
+            'slug' => $slug,
+            'short_description' => $validated['short_description'],
+            'description' => $validated['description'],
+            'funding_goal' => $validated['funding_goal'],
+            'min_contribution' => $validated['min_contribution'],
+            'duration' => $duration,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'status' => 'pending',
+            'cover_image' => $coverImagePath,
+            'video_url' => $validated['video_url'] ?? null,
+            'featured' => false
+        ]);
+        
+        
+        $tagIds = [];
+            
+        if (!empty($request->tags)) {
+            $tagNames = array_map('trim', explode(',', $request->tags));
+            
+            foreach ($tagNames as $name) {
+                if (!empty($name)) {
+                    $tag = Tag::firstOrCreate(
+                        ['name' => $name],
+                        ['slug' => Str::slug($name)]
+                    );
+                    $tagIds[] = $tag->id;
+                }
+            }
+            
+            $project->tags()->sync($tagIds);
+        }
+        
+        return redirect()->route('project.show', $project->slug)
+            ->with('success', 'Votre projet a été créé et est en attente de validation.');
     }
-    
-    return redirect()->route('project.show', $project->slug)
-        ->with('success', 'Votre projet a été créé et est en attente de validation.');
-}
+
+
     public function edit($slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
@@ -156,9 +166,11 @@ class ProjectController extends Controller
         
         $categories = Category::all();
         $tags = Tag::all();
-        
-        return view('project.edit', compact('project', 'categories', 'tags'));
+        $tagNames = $project->tags->pluck('name')->join(',');
+
+        return view('project.edit', compact('project', 'categories', 'tags', 'tagNames'));
     }
+
 
     public function update(Request $request, $slug)
     {
@@ -173,10 +185,11 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'funding_goal' => 'required|numeric|min:1',
             'min_contribution' => 'required|numeric|min:1',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'cover_image' => 'nullable|image|max:2048',
             'video_url' => 'nullable|url',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
+            'tags' => 'nullable|string',
         ]);
         
         if ($project->name !== $validated['name']) {
@@ -207,11 +220,28 @@ class ProjectController extends Controller
         $project->description = $validated['description'];
         $project->funding_goal = $validated['funding_goal'];
         $project->min_contribution = $validated['min_contribution'];
+        $project->start_date = $request->start_date;
+        $project->end_date = $request->end_date;
+        $project->status = $request->status;
         $project->video_url = $validated['video_url'] ?? null;
         $project->save();
         
-        if (isset($validated['tags'])) {
-            $project->tags()->sync($validated['tags']);
+        $tagIds = [];
+        
+        if (!empty($request->tags)) {
+            $tagNames = array_map('trim', explode(',', $request->tags));
+            
+            foreach ($tagNames as $name) {
+                if (!empty($name)) {
+                    $tag = Tag::firstOrCreate(
+                        ['name' => $name],
+                        ['slug' => Str::slug($name)]
+                    );
+                    $tagIds[] = $tag->id;
+                }
+            }
+            
+            $project->tags()->sync($tagIds);
         } else {
             $project->tags()->detach();
         }

@@ -135,7 +135,7 @@
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body text-center">
                                     <div class="rounded-circle bg-light mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
-                                        <i data-feather="user" style="width: 48px; height: 48px;"></i>
+                                        <i data-feather="user"></i>
                                     </div>
                                     <h5>Sophie Martin</h5>
                                     <p class="text-success">Directrice Générale</p>
@@ -147,7 +147,7 @@
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body text-center">
                                     <div class="rounded-circle bg-light mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
-                                        <i data-feather="user" style="width: 48px; height: 48px;"></i>
+                                        <i data-feather="user"></i>
                                     </div>
                                     <h5>Thomas Dubois</h5>
                                     <p class="text-success">Directeur des Opérations</p>
@@ -159,7 +159,7 @@
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body text-center">
                                     <div class="rounded-circle bg-light mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
-                                        <i data-feather="user" style="width: 48px; height: 48px;"></i>
+                                        <i data-feather="user"></i>
                                     </div>
                                     <h5>Lucie Bernard</h5>
                                     <p class="text-success">Responsable Partenariats</p>
@@ -171,7 +171,7 @@
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body text-center">
                                     <div class="rounded-circle bg-light mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
-                                        <i data-feather="user" style="width: 48px; height: 48px;"></i>
+                                        <i data-feather="user"></i>
                                     </div>
                                     <h5>Marc Leroy</h5>
                                     <p class="text-success">Responsable Technique</p>

@@ -95,7 +95,7 @@
                         
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-lock me-2"></i>Payer {{ $project->min_contribution }} €
+                                Payer {{ $project->min_contribution }} €
                             </button>
                             <a href="{{ route('project.show', $project->slug) }}" class="btn btn-outline-secondary">Annuler</a>
                         </div>
@@ -138,11 +138,11 @@
                 <div class="card-body">
                     <h5 class="card-title">Informations de sécurité</h5>
                     <p class="card-text small">
-                        <i class="fas fa-lock me-2 text-success"></i>
+                        <i data-feather="lock" class="me-2 text-success"></i>
                         Vos informations de paiement sont sécurisées et cryptées. Nous ne stockons pas les détails de votre carte.
                     </p>
                     <p class="card-text small">
-                        <i class="fas fa-shield-alt me-2 text-success"></i>
+                        <i data-feather="shield" class="me-2 text-success"></i>
                         Notre plateforme utilise les technologies de sécurité les plus récentes pour protéger vos données.
                     </p>
                 </div>
@@ -188,7 +188,7 @@
         const submitButton = document.querySelector('button[type="submit"]');
         
         amountInput.addEventListener('input', function() {
-            submitButton.innerHTML = `<i class="fas fa-lock me-2"></i>Payer ${this.value} €`;
+            submitButton.innerHTML = `<i data-feather="lock" class="me-2"></i>Payer ${this.value} €`;
         });
     });
 </script>

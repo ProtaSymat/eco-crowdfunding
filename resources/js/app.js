@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             commentForm.scrollIntoView({ behavior: 'smooth' });
             cancelReplyButton.classList.remove('d-none');
             const submitButton = commentForm.querySelector('button[type="submit"]');
-            submitButton.innerHTML = '<i class="fas fa-reply me-2"></i>Répondre';
+            submitButton.innerHTML = '<i data-feather="edit-2" class="me-2"></i>Répondre';
         });
     });
     
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         commentTextarea.value = '';
         this.classList.add('d-none');
         const submitButton = commentForm.querySelector('button[type="submit"]');
-        submitButton.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Publier';
+        submitButton.innerHTML = '<i data-feather="send" class="me-2"></i>Publier';
     });
     
     const editButtons = document.querySelectorAll('.edit-comment');

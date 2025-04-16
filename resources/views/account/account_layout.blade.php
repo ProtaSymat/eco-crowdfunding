@@ -107,10 +107,10 @@
                         <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.categories') ? 'active' : '' }}">
                             <i data-feather="tag" class="feather-sm me-2"></i>Catégories
                         </a>
-                        <a href="{{ route('admin.projects') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.projects') ? 'active' : '' }}">
+                        <a href="{{ route('admin.projects.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.projects') ? 'active' : '' }}">
                             <i data-feather="briefcase" class="feather-sm me-2"></i>Projets
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action {{ request()->routeIs('admin.contributions') ? 'active' : '' }}">
+                        <a href="{{ route('admin.contributions.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.contributions') ? 'active' : '' }}">
                             <i data-feather="credit-card" class="feather-sm me-2"></i>Contributions
                         </a>
                         <div class="list-group-item bg-light text-muted">

@@ -43,11 +43,11 @@
             <div class="d-flex flex-wrap gap-2 mb-4">
                 <a href="#" class="badge bg-light text-dark text-decoration-none p-2">
                     Catégorie :
-                    <i class="fas fa-tag me-1"></i>{{ $project->category->name }}
+                    <i data-feather="tag" class="me-1"></i>{{ $project->category->name }}
                 </a>
                 @foreach($project->tags as $tag)
                     <a href="{{ route('project.index', ['tag' => $tag->id]) }}" class="badge bg-light text-dark text-decoration-none p-2">
-                        <i class="fas fa-hashtag me-1"></i>{{ $tag->name }}
+                        <i data-feather="hash" class="me-1"></i>{{ $tag->name }}
                     </a>
                 @endforeach
             </div>
@@ -101,7 +101,7 @@
                     @if(auth()->check() && auth()->id() === $project->user_id)
                         <div class="mt-3">
                             <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addImageModal">
-                                <i class="fas fa-plus-circle me-2"></i>Ajouter une image
+                                <i data-feather="plus-circle" class="me-2"></i>Ajouter une image
                             </button>
                         </div>
                         
@@ -159,12 +159,12 @@
                         <div class="tab-pane fade show active" id="description-tab-pane" role="tabpanel" aria-labelledby="description-tab" tabindex="0">
                             <div class="mt-4">
                             @if($project->video_url)
-                        <div class="ratio ratio-16x9 mb-4">
-                            <iframe src="{{ Str::contains($project->video_url, 'youtube') ? str_replace('watch?v=', 'embed/', $project->video_url) : $project->video_url }}" 
-                                    title="{{ $project->name }}" 
-                                    allowfullscreen></iframe>
-                        </div>
-                    @endif
+                                <div class="ratio ratio-16x9 mb-4">
+                                    <iframe src="{{ Str::contains($project->video_url, 'youtube') ? str_replace('watch?v=', 'embed/', $project->video_url) : $project->video_url }}" 
+                                            title="{{ $project->name }}" 
+                                            allowfullscreen></iframe>
+                                </div>
+                            @endif
                                 {!! $project->description !!}
                             </div>
                         </div>
@@ -202,7 +202,7 @@
                                             <div class="text-end">
                                                 <button type="button" id="cancel-reply" class="btn btn-light me-2 d-none">Annuler la réponse</button>
                                                 <button type="submit" class="btn btn-success">
-                                                    <i class="fas fa-paper-plane me-2"></i>Publier
+                                                    <i data-feather="send" class="me-2"></i>Publier
                                                 </button>
                                             </div>
                                         </form>
@@ -210,7 +210,7 @@
                                 </div>
                                 @else
                                 <div class="alert alert-info mb-4">
-                                    <i class="fas fa-info-circle me-2"></i>
+                                    <i data-feather="help-circle" class="me-2"></i>
                                     <a href="{{ route('login') }}" class="alert-link">Connectez-vous</a> ou 
                                     <a href="{{ route('register') }}" class="alert-link">créez un compte</a> pour laisser un commentaire.
                                 </div>
@@ -247,11 +247,11 @@
                                                             @if(auth()->check() && $comment->user && (auth()->id() === $comment->user_id || auth()->user()->role === 'admin'))
                                                                 <div class="dropdown">
                                                                     <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="fas fa-ellipsis-v"></i>
+                                                                        <i data-feather="more-horizontal"></i>
                                                                     </button>
                                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                                         @if(auth()->id() === $comment->user_id)
-                                                                            <li><button class="dropdown-item edit-comment" data-comment-id="{{ $comment->id }}"><i class="fas fa-edit me-2"></i>Modifier</button></li>
+                                                                            <li><button class="dropdown-item edit-comment" data-comment-id="{{ $comment->id }}"><i data-feather="edit" class="me-2"></i>Modifier</button></li>
                                                                         @endif
                                                                     
                                                                         
@@ -261,7 +261,7 @@
                                                                                 <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">
                                                                                     @csrf
                                                                                     @method('DELETE')
-                                                                                    <button type="submit" class="dropdown-item text-danger"><i class="fas fa-trash-alt me-2"></i>Supprimer</button>
+                                                                                    <button type="submit" class="dropdown-item text-danger"><i data-feather="trash" class="me-2"></i>Supprimer</button>
                                                                                 </form>
                                                                             </li>
                                                                         @endif
@@ -272,7 +272,7 @@
                                                         
                                                         @if($comment->is_hidden)
                                                             <div class="alert alert-warning mb-2 py-2">
-                                                                <i class="fas fa-eye-slash me-2"></i>Ce commentaire a été masqué par un administrateur.
+                                                                <i data-feather="eye-off" class="me-2"></i>Ce commentaire a été masqué par un administrateur.
                                                             </div>
                                                         @endif
                                                         
@@ -283,7 +283,7 @@
                                                         @auth
                                                             <div class="d-flex">
                                                                 <button class="btn btn-sm btn-outline-secondary reply-button" data-comment-id="{{ $comment->id }}">
-                                                                    <i class="fas fa-reply me-1"></i>Répondre
+                                                                    <i data-feather="send" class="me-1"></i>Répondre
                                                                 </button>
                                                             </div>
                                                         @endauth
@@ -318,11 +318,11 @@
                                                                                         @if(auth()->check() && $reply->user && (auth()->id() === $reply->user_id || auth()->user()->role === 'admin'))
                                                                                             <div class="dropdown">
                                                                                                 <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                                    <i class="fas fa-ellipsis-v"></i>
+                                                                                                    <i data-feather="more-horizontal"></i>
                                                                                                 </button>
                                                                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                                                                     @if(auth()->id() === $reply->user_id)
-                                                                                                        <li><button class="dropdown-item edit-comment" data-comment-id="{{ $reply->id }}"><i class="fas fa-edit me-2"></i>Modifier</button></li>
+                                                                                                        <li><button class="dropdown-item edit-comment" data-comment-id="{{ $reply->id }}"><i data-feather="edit" class="me-2"></i>Modifier</button></li>
                                                                                                     @endif
                                                                                                     
                                                                                                    
@@ -333,7 +333,7 @@
                                                                                                             <form action="{{ route('comments.destroy', $reply->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?')">
                                                                                                                 @csrf
                                                                                                                 @method('DELETE')
-                                                                                                                <button type="submit" class="dropdown-item text-danger"><i class="fas fa-trash-alt me-2"></i>Supprimer</button>
+                                                                                                                <button type="submit" class="dropdown-item text-danger"><i data-feather="trash" class="me-2"></i>Supprimer</button>
                                                                                                             </form>
                                                                                                         </li>
                                                                                                     @endif
@@ -344,7 +344,7 @@
                                                                                     
                                                                                     @if($reply->is_hidden)
                                                                                         <div class="alert alert-warning mb-2 py-1 small">
-                                                                                            <i class="fas fa-eye-slash me-1"></i>Cette réponse a été masquée par un administrateur.
+                                                                                            <i class="eye-slash" class="me-1"></i>Cette réponse a été masquée par un administrateur.
                                                                                         </div>
                                                                                     @endif
                                                                                     
@@ -426,10 +426,10 @@
                     <div class="d-grid gap-2">
                     <a href="{{ route('project.support', $project->slug) }}" class="btn btn-success btn-lg">
 
-                            <i class="fas fa-dollar-sign me-2"></i>Soutenir ce projet
+                            <i data-feather="dollar-sign" class="me-2"></i>Soutenir ce projet
 </a>
                         <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#shareProjectModal">
-                            <i class="fas fa-share-alt me-2"></i>Partager
+                            <i data-feather="share" class="me-2"></i>Partager
                         </button>
                     </div>
                     
@@ -473,7 +473,7 @@
                                     <span>{{ $contribution->user->name }}</span>
                                 @else
                                     <div class="avatar-placeholder rounded-circle me-2 d-inline-flex align-items-center justify-content-center bg-secondary text-white" style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                        <i class="fas fa-user"></i>
+                                        <i data-feather="user"></i>
                                     </div>
                                     <span>Donateur anonyme</span>
                                 @endif
@@ -529,7 +529,7 @@
                                         <span>{{ $contribution->user->name }}</span>
                                     @else
                                         <div class="avatar-placeholder rounded-circle me-2 d-inline-flex align-items-center justify-content-center bg-secondary text-white" style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                            <i class="fas fa-user"></i>
+                                            <i data-feather="user"></i>
                                         </div>
                                         <span>Donateur anonyme</span>
                                     @endif
@@ -622,7 +622,7 @@
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" id="shareLink" value="{{ route('project.show', $project->slug) }}" readonly>
                         <button class="btn btn-outline-success" type="button" id="copyLinkBtn" onclick="copyShareLink()">
-                            <i class="fas fa-copy me-1"></i> Copier
+                            <i data-feather="copy" class="me-1"></i> Copier
                         </button>
                     </div>
                     <div id="linkCopiedAlert" class="alert alert-success d-none">

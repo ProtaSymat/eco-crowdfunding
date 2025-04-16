@@ -22,10 +22,10 @@
                         
                         <div class="d-flex justify-content-center gap-3">
                             <a href="{{ route('project.show', $project->slug) }}" class="btn btn-primary">
-                                <i class="fas fa-arrow-left me-2"></i>Retour au projet
+                                <i data-feather="corner-down-left" class="me-2"></i>Retour au projet
                             </a>
                             <a href="{{ route('user.contributions') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-history me-2"></i>Voir mes contributions
+                                Voir mes contributions
                             </a>
                         </div>
                     </div>

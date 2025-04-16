@@ -13,7 +13,7 @@
     <div class="mb-5">
         <h1 class="display-5 fw-bold mb-5">Modifier le projet</h1>
     
-    <form action="{{ route('project.update', $project->slug) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('project.update', $project->slug) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row">
@@ -57,8 +57,8 @@
                 
                 <div class="mb-3">
                     <label for="tags" class="form-label">Tags (séparés par des virgules)</label>
-                    <input type="text" class="form-control" id="tags" name="tags" value="{{ $project->tags }}">
-                </div>
+                    <input type="text" class="form-control" id="tags" name="tags" value="{{ $tagNames }}">
+                    </div>
             </div>
             
             <div class="col-lg-4">
@@ -75,13 +75,15 @@
                 <div class="row mb-3">
                     <div class="col">
                         <label for="start_date" class="form-label">Date de début</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ \Carbon\Carbon::parse($project->start_date)->format('d/m/Y') }}" required>
+                        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ \Carbon\Carbon::parse($project->start_date)->format('Y-m-d') }}" required>
                     </div>
                     <div class="col">
                         <label for="end_date" class="form-label">Date de fin</label>
-                        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ \Carbon\Carbon::parse($project->end_date)->format('d/m/Y') }}" required>
+                        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ \Carbon\Carbon::parse($project->end_date)->format('Y-m-d') }}" required>
                     </div>
                 </div>
+
+                
                 
                 <div class="mb-3">
                     <label for="status" class="form-label">Statut</label>
